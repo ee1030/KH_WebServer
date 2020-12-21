@@ -15,10 +15,28 @@
   -->
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  <!-- Servlet 생성 및 url 연결 -->
+  <servlet>
+  	<servlet-name>Test1</servlet-name>
+  	<servlet-class>
+  		com.kh.servlet.controller.TestServlet1
+  	</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>Test1</servlet-name>
+  	<url-pattern>/testServlet1.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+	  <servlet-name>Test2</servlet-name>
+	  <servlet-class>
+	  	com.kh.servlet.controller.TestServlet2
+	  </servlet-class>
+  </servlet>
+  <servlet-mapping>
+ 	<servlet-name>Test2</servlet-name>
+ 	<url-pattern>/testServlet2.do</url-pattern>
+  </servlet-mapping>
 </web-app>

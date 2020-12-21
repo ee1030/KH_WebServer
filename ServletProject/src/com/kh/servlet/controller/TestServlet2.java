@@ -3,68 +3,36 @@ package com.kh.servlet.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TestServlet1 extends HttpServlet {
+public class TestServlet2 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public TestServlet1() {
+    public TestServlet2() {
         super();
     }
 
-	public void init(ServletConfig config) throws ServletException {
-		System.out.println("init() 메소드 호출(servlet 객체 생성됨)");
-		// init() 메소드 다음에는 service()가 호출됨
-		// init() 메소드가 없을 경우 자동으로 service() 메소드가 호출 됨.
-	}
-
-	public void destroy() {
-		System.out.println("destroy() 호출 됨.");
-	}
-
-//	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//	}
-//	service() 메소드가 없을 경우
-//	자동으로 요청 방식이 get/post임을 확인하여
-//	get일 경우 doGet(), post일 경우 doPost()를 호출함.
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		request.setCharacterEncoding("UTF-8");
+		// POST 방식으로 데이터 전송 시 인코딩이 정해져 있지 않아
+		// 아스키 코드 범위(영어, 숫자, 특수문자 몇개)를 제외한 문자는
+		// 모두 깨진다.
 		
-		// MVC에서 Controller의 역할
+		// POST 방식으로 데이터 전송 시 문자 인코딩이 지정되지 않아
+		// 전달되는 데이터의 문자 인코딩이 브라우저의 기본값(ISO-8859-1)을 따름.
+		// UTF-8(이클립스 세팅) 과 일치하지 않으므로
+		// 파라미터를 얻어오기 전에 request의 문자 인코딩을 UTF-8로 변경.
 		
-		// Model : 비즈니스 로직 처리 역할(Service, DAO, VO, ...)
-		
-		// View : 입력(요청)을 받아서 결과(응답)을 보여주는 역할
-		// 			(HTML, Servlet, jsp)
-		
-		// Controller : 요청에 따라 알맞은 Model을 연결하고 
-		//				Model 처리 결과를 보여줄 View를 선택하는 역할
-		//				(Servlet)
-		
-		// HttpServletRequest
-		// : 웹 브라우저에서 사용자가 요청한 내용과 관련 정보를 받아주는 객체
-		
-		// HttpServletResponse
-		// : 요청 처리 결과를 요청한 클라이언트에게 전달하는 역할을 하는 객체
-		
-		// form 태그에서 제출된 값(Parameter) 얻어오기
-		// tip. 파라미터의 자료형은 모두 String이다.
-		
-		// request.getParameter("name속성값")
-		// -> 해당 name 속성으로 전달된 input태그의 value를 얻어옴
-		
+		// 요청 데이터(파라미터)를 모두 얻어와 각 변수에 저장
 		String name = request.getParameter("name");
 		String gender = request.getParameter("gender");
 		String age = request.getParameter("age");
 		String city = request.getParameter("city");
 		String height = request.getParameter("height");
-		
-		// 체크박스 또는 name 속성이 같은 여러 input태그 값을 얻어올 경우
-		// String[] 형태로 얻어와야 함.
 		String[] foodArr = request.getParameterValues("food");
 		
 		// 파라미터 전달 확인
@@ -82,12 +50,10 @@ public class TestServlet1 extends HttpServlet {
 			System.out.println("foodArr[" + i + "] : " + foodArr[i]);
 		}
 		
-		// 응답(resposne) 화면 준비
+		// 응답 화면 준비
 		response.setContentType("text/html; charset=UTF-8");
 		
-		// 서버에서 작성된 문자열을 출력할 스트림을
-		// HttpservletResponse 객체를 이용해서 얻어와
-		// 클라이언트 응답 화면과 연결한다.
+		// 응답 화면을 내보낼 스트림 연결
 		PrintWriter out = response.getWriter();
 		
 		out.println("<!DOCTYPE html>\r\n" + 
@@ -108,7 +74,7 @@ public class TestServlet1 extends HttpServlet {
 				"    </style>\r\n" + 
 				"</head>\r\n" + 
 				"<body>\r\n" + 
-				"    <h1>개인 정보 입력 결과(GET)</h1>");
+				"    <h1>개인 정보 입력 결과(POST)</h1>");
 		
 		out.printf("    <span class='name'>%s</span>님은\r\n" + 
 				"    <span class='age'>%s</span> 이며,\r\n" + 
@@ -126,8 +92,6 @@ public class TestServlet1 extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
-		// post로 요청이 와도 doGet() 메소드로 처리하겠다.
-		// == get 방식이든 post 방식이든 같은 방법으로 처리하겠다.
 	}
 
 }

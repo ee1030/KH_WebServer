@@ -74,6 +74,10 @@
 						GET 방식은 URL에 변수(데이터)를 포함시켜 요청하는 방법 중 하나로<br>
 						요청에 사용되는 데이터가 주소에 노출되어 보안 유지가 불가능 하다.<br>
 						ex) 로그인 시 아이디, 비밀번호가 주소창에 노출 됨.<br><br>
+						GET방식에서 데이터를 Header에 포함하여 전송하는데
+	                    Body는 보통 빈 상태로 전송 되며 Header내용 중 Body의 데이터를 설명하는 Content-Type헤더필드도 들어가지 않는다.
+                  		Header에 데이터가 들어가기 때문에 전송하는 길이에 제한이 있으며 초과 데이터는 절단된다. 캐싱이 가능하다.
+						
 					</p>
 						
                     <p>
@@ -84,11 +88,14 @@
             <div class="row">
                     <h2>Servlet - 2(POST)</h2>
                     <p>
-
+						POST방식은 URL에 변수(데이터)를 노출하지 않고 요청하는 것으로 보안 유지가 가능하다.
+						데이터를 Body에 포함하여 전송하므로 Body의 데이터를 설명하는 Content-Type헤더필드가 들어가고 어떤 타입인지 명시해줘야 한다.
+						Body에 데이터가 들어가 전송 길이는 제한이 없지만 최대 요청 받는 시간(Time Out)이 존재해 페이지 요청, 기다리는 시간이 있다.
+						URL에 데이터가 노출되지 않아 즐겨찾기나 캐싱이 불가능하다.
 
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="#" role="button">View
+                        <a class="btn btn-secondary" href="views/testServlet2.html" role="button">View
                             details &raquo;</a>
                     </p>
             </div>                
