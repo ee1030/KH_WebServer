@@ -50,4 +50,16 @@
 	<servlet-name>Test3</servlet-name>
 	<url-pattern>/testServlet3.do</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+ 	<servlet-name>Test4</servlet-name>
+ 	<servlet-class>
+ 		com.kh.servlet.controller.TestServlet4
+ 	</servlet-class>
+ </servlet>
+ <servlet-mapping>
+	<servlet-name>Test4</servlet-name>
+	<url-pattern>/testServlet4.do</url-pattern>
+ </servlet-mapping>
+  
 </web-app>
