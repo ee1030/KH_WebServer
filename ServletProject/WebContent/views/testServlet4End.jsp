@@ -42,5 +42,8 @@
     <br>
     좋아하는 음식은
     <span class='food'><%=foodJoin %></span> 입니다.
+    
+    <h3><%=age %>에 추천할 만한 선물</h3>
+    <h4><%=gift %>는 어떠신가요?</h4>
 </body>
 </html>

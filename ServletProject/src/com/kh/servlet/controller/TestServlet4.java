@@ -74,6 +74,12 @@ public class TestServlet4 extends HttpServlet {
 		 * 기존 파라미터 등의 요청 정보를 유지하며 페이지를 전환하는 방법.
 		 * -> forward 방식으로 페이지 전환시 이전 페이지 주소가 유지됨.
 		 * 
+		 * A.html -(요청)-> B.do(Servlet) -(요청위임)-> B.jsp
+		 * 요청위임 시 forward 방식을 사용할 경우
+		 * 요청 위임 객체 RequestDispatcher가 B.do에서 C.jsp로 넘어가지만,
+		 * 주소는 B.do로 유지가 됨.
+		 * 	-> (B.do 의 응답 화면 코드가 C.jsp로 대체가 됐을 뿐이다.)
+		 * 
 		 * */
 		
 	}
