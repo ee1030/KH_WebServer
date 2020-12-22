@@ -39,4 +39,15 @@
  	<servlet-name>Test2</servlet-name>
  	<url-pattern>/testServlet2.do</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>Test3</servlet-name>
+  	<servlet-class>
+  		com.kh.servlet.controller.TestServlet3
+  	</servlet-class>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>Test3</servlet-name>
+	<url-pattern>/testServlet3.do</url-pattern>
+  </servlet-mapping>
 </web-app>
