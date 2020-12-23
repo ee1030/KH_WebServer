@@ -7,6 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	학원명(session scope) : ${academyName}<br>
+	강의장(request scope) : ${classRoom} <br>
+	
+	<button onclick="history.back();">돌아가기</button>
 </body>
 </html>

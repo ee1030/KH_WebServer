@@ -42,6 +42,11 @@ public class ELServlet1 extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.setAttribute("academyName", "KH정보교육원");
 		
+		// request, session 객체가
+		// 동일한 속성명의 속성을 가진 경우
+		request.setAttribute("scope", "request scope");
+		session.setAttribute("scope", "session scope");
+		
 		// 요청 위임
 		RequestDispatcher view = request.getRequestDispatcher("/views/01_el/01_el.jsp");
 								// views 앞에 '/' == 최상단 폴더(WebContent)

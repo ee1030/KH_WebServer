@@ -70,6 +70,9 @@
 		--%>
 	</ul>
 	
+	<a href="/EL_JSTL/views/01_el/sessionTest.jsp">
+		Session Scope Test
+	</a>
 	
 	<hr>
 	
@@ -78,15 +81,45 @@
 	
 	
 	<pre>
-	     
+	웹 애플리케이션에서 객체는 4가지 영역(범위)를 가짐
+	page, request, session, application 
+	1. page 영역
+	 - 하나의 JSP 페이지 내에서만 객체 공유
+	  -> forward 되더라도 해당 페이지에 지정된 변수를 사용할 수 없다.
+	 - pageContext라는 JSP 내장 객체를 사용해도 선언 가능
+	 
+	2. request 영역
+	 - 요청을 하는 페이지 + 요청을 위임 받은(응답) 페이지 에서 객체 공유
+	 - Servlet에서 JSP로 객체를 공유하는 경우
+	  -> request.setAttribute("속성명", 객체); 로 전달
+	  -> JSP에서는 Object obj = request.getAttribute("속성명"); 으로 받음.
+	  
+	3. session 영역
+	 - 하나의 브라우저당 1개의 session 객체가 생성되며 같은 브라우저 내에서 객체를 공유.
+	 - 브라우저가 종료되거나 session이 만료되면 반환됨.
+	 - request.getSession() 메소드를 호출하여 session영역 객체를 얻어옴
+	
+	    
+	4. application 영역
+	 - 하나의 웹 애플리케이션당 하나의 application 객체가 생성됨.
+	 - 애플리 케이션이 종료되기 전 까지 모든 페이지에서 객체 공유
+	 - request.getServletContext() 메소드를 호출하여 application 영역 객체를 얻어옴.
+	 
+	모든 웹 애플리케이션 객체는 
+	setAttribute("속성명", 객체)로 세팅,
+	getAttribute("속성명")로 객체를 얻어올 수 있음.
+	 
+	 el은 page -> request -> sessionS -> applicationScope 순으로 속성을 찾는다.
+	 
 	</pre>
 	
-
-
 	<br><br>
 	<hr>
 	<h3>4. 특정 내장 객체에 저장된 속성 다루기</h3>
-	
+	scope 출력 : ${scope}<br>
+		<!-- request, session 중 범위가 작은 request가 출력됨 -->
+	session에 있는 scope를 출력하고 싶을때 : ${sessionScope.scope} <br>
+	request에 있는 scope를 출력하고 싶을때 : ${requestScope.scope} <br>
 	
 
 	
