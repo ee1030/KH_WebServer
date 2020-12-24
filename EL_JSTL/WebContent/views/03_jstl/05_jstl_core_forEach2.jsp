@@ -12,7 +12,7 @@
 	EL 3.0 버전 이상을 지원하는 was에서만 EL컬렉션객체 사용 가능
 	톰캣 8.0부터 EL 3.0을 지원함.
 -->
-<c:set var="myList" value='${["A","B","C","D","E"]}' scope="request" />
+<%-- <c:set var="myList" value='${["A","B","C","D","E"]}' scope="request" /> --%>
 
 <c:set var="mySet" value='${{"A","B","C","B","A"}}' scope="request" />
 
