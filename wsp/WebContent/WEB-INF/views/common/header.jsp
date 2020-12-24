@@ -27,7 +27,11 @@ body {
 </head>
 
 <body>
-
+	<%-- 
+		프로젝트의 시작주소(context root)를 얻어와 간단하게 사용할 수 있도록
+		별도의 변수를 생성
+	--%>
+	<c:set var="contextPath" scope="application" value="${pageContext.servletContext.contextPath}"></c:set>>
 
 	<!-- Navigation으로 된 header -->
 	<div class="header navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -42,7 +46,15 @@ body {
 					<li class="nav-item"><a class="nav-link" href="#">Board</a></li>
 
 
-					<li class="nav-item active"><a class="nav-link" data-toggle="modal" href="#modal-container-1">Login</a></li>
+					<!-- 헤더에 있는 login 버튼 클릭 시
+						 #modal-container-1 이라는 아이디를 가진 요소를
+						 보여지게 함.
+					 -->
+					<li class="nav-item active">
+						<a class="nav-link" data-toggle="modal" href="#modal-container-1">
+							Login
+						</a>
+					</li>
 
 
 				</ul>
@@ -65,7 +77,7 @@ body {
 				</div>
 
 				<div class="modal-body">
-					<form class="form-signin" method="POST" action="#">
+					<form class="form-signin" method="POST" action="${contextPath}/member/login.do">
 
 
 						<input type="text" class="form-control" id="memberId" name="memberId" placeholder="아이디" value="">
