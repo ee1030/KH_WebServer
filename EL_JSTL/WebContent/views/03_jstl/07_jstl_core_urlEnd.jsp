@@ -8,9 +8,9 @@
 <title>JSTL - core tag(url)</title>
 </head>
 <body>
-	상품명 :  <br>
-	수량 : <br>
-	옵션1 : <br>
-	옵션2 : 
+	상품명 : ${param.pname}<br>
+	수량 : ${param.pcount}<br>
+	옵션1 : ${paramValues.option[0]}<br>
+	옵션2 : ${paramValues.option[1]}
 </body>
 </html>

@@ -14,8 +14,11 @@
 	   delims 속성에는 토큰을 분리하는데 사용할 구획 문자를 기술.
 
 	<h3>device</h3>
+	<!-- 컴퓨터,핸드폰,TV,에어컨,냉장고,세탁기 -->
 	<ul>
-	
+		<c:forTokens var="i" items="${device}" delims=",">
+			<li>${i}</li>
+		</c:forTokens>
 	</ul>
 	
 	<hr>
@@ -23,7 +26,9 @@
 	
 	<h3>device2</h3>
 	<ul>
-	
+		<c:forTokens var="i" items="${device2}" delims=",./">
+			<li>${i}</li>
+		</c:forTokens>
 	</ul>
 </body>
 </html>

@@ -13,6 +13,12 @@
 	- 해당 태그를 통해 url 경로와 관련 쿼리스트링의 값을 미리 설정하여 이를 제어할 수 있음
 	<br><br>
 
+	<c:url var="url" value="07_jstl_core_urlEnd.jsp">
+		<c:param name="pname">아메리카노</c:param>
+		<c:param name="pcount">1</c:param>
+		<c:param name="option">응애샷</c:param>
+		<c:param name="option">애응추가</c:param>
+	</c:url>
 	
 	<a href="${url}"> 07_jstl_core_urlEnd.jsp </a>
 </body>
