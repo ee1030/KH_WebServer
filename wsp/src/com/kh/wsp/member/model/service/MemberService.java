@@ -4,9 +4,12 @@ import static com.kh.wsp.common.JDBCTemplate.*;
 
 import java.sql.Connection;
 
+import com.kh.wsp.member.model.dao.MemberDAO;
 import com.kh.wsp.member.model.vo.Member;
 
 public class MemberService {
+	
+	private MemberDAO dao = new MemberDAO();
 
 	/** 로그인 Service
 	 * @param member
@@ -18,11 +21,13 @@ public class MemberService {
 		Connection conn = getConnection();
 		
 		// 2) DAO 메소드를 실행하여 결과 반환 받기
+		Member loginMember = dao.loginMember(conn, member);
 		
 		// 3) Connection 반환하기
+		conn.close();
 		
 		// 4) DAO 수행 결과를 Controller로 반환
-		return null;
+		return loginMember;
 	}
 
 }

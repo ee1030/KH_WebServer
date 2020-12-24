@@ -1,11 +1,14 @@
 package com.kh.wsp.member.controller;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.kh.wsp.member.model.service.MemberService;
 import com.kh.wsp.member.model.vo.Member;
@@ -43,8 +46,67 @@ public class LoginServlet extends HttpServlet {
 			// (로그인 이란? id/pw가 일치하는 회원정보를 DB에서 조회해 오는것)
 			Member loginMember = new MemberService().loginMember(member);
 			
+			// System.out.println(loginMember);
+			
+			// 로그인 정보는 로그아웃 또는 브라우저가 종료될 때 까지 유지되어야 한다.
+			// --> Session을 활용함
+			
+			// 5. 응답 화면 문서 타입 지정
+			response.setContentType("text/html; charset=UTF-8");
+			
+			// 6. Session 객체를 얻어와 로그인 정보를 추가함
+			HttpSession session = request.getSession();
+			
+			// 6-1. 로그인이 성공 했을때만 Session에 로그인 정보 추가하기
+			if(loginMember != null) {
+				
+				// 6-2. 30분 동안 동작이 없을 경우 Session을 만료시킴
+				session.setMaxInactiveInterval(60 * 1); // 테스트용 1분후 만료
+												// 초단위
+				
+				// 6-3. Session에 로그인 정보 추가
+				session.setAttribute("loginMember", loginMember);
+			} else {
+				// 7. 로그인이 실패 했을 때 "아이디 또는 비밀번호를 확인해주세요." 라고 경고창 띄우기
+				// -> Session에 "아이디 또는 비밀번호를 확인해주세요." 라는 문자열을 담아서 리다이렉트하기
+				
+				// session.setAttribute("text", "아이디 또는 비밀번호를 확인해주세요.");
+				
+				// sweet alert 사용하기
+				session.setAttribute("swalIcon", "error");
+				session.setAttribute("swalTitle", "로그인 실패");
+				session.setAttribute("swalText", "아이디 또는 비밀번호를 확인해주세요.");
+			}
+			
+			// redirect 방식을 이용하여 로그인을 요청했던 페이지로 이동
+			
+			/*
+			 * forward 같은 경우에는 이동하는 페이지로
+			 * request, response 객체를 그대로 위임하고,
+			 * 주소를 위임 전 주소로 유지하지만,
+			 * 
+			 * redirect는 이전 request, response를 폐기하고
+			 * 새롭게 만들어서 지정된 주소로 새로운 요청을 보냄.
+			 * -> 새롭게 요청을 보내기 때문에 이전 요청 주소가 아닌
+			 * 	  새로운 요청 주소가 주소창에 나타남.
+			 * */
+			
+	        // referer : 사이트 방문 흔적
+	        // request.getHeader("referer") : 요청 전 페이지 주소가 담겨있다.
+			response.sendRedirect(request.getHeader("referer"));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			
+			// 로그인 과정에서 오류 발생 시 errorPage.jsp로 forward 진행
+			request.setAttribute("errorMsg", "로그인 과정에서 오류가 발생했습니다.");
+			
+			// 요청 위임 객체 생성
+			RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/views/common/errorPage.jsp");
+			
+			view.forward(request, response);
+			// redirect는 요청 주소를 적지만 (/wsp/login.do)
+			// forward는 요청할 페이지의 파일 경로를 적는다.
 		}
 	}
 

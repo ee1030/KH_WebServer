@@ -19,6 +19,19 @@ public class Member {
 	public Member() {
 
 	}
+	
+	public Member(int memberNo, String memberId, String memberName, String memberPhone, String memberEmail,
+			String memberAddress, String memberInterest, String memberGrade) {
+		super();
+		this.memberNo = memberNo;
+		this.memberId = memberId;
+		this.memberName = memberName;
+		this.memberPhone = memberPhone;
+		this.memberEmail = memberEmail;
+		this.memberAddress = memberAddress;
+		this.memberInterest = memberInterest;
+		this.memberGrade = memberGrade;
+	}
 
 	public Member(int memberNo, String memberId, String memberPwd, String memberName, String memberPhone,
 			String memberEmail, String memberAddress, String memberInterest, Date memberEnrollDate, String memberStatus,

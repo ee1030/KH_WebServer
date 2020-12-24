@@ -31,8 +31,26 @@ body {
 		프로젝트의 시작주소(context root)를 얻어와 간단하게 사용할 수 있도록
 		별도의 변수를 생성
 	--%>
-	<c:set var="contextPath" scope="application" value="${pageContext.servletContext.contextPath}"></c:set>>
+	<c:set var="contextPath" scope="application" value="${pageContext.servletContext.contextPath}"></c:set>
 
+	<%--
+		로그인 실패 등의 서버로 부터 전달 받은 메세지를 경고창으로 출력하기
+		
+		1) 서버로부터 전달 받은 메세지가 있는지 검사	
+	--%>
+	<c:if test="${!empty sessionScope.swalTitle }">
+		<script>
+			swal({title : "${swalTitle}",
+				  text : "${swalText}",
+				  icon : "${swalIcon}"});
+		</script>
+		
+		<%-- 2) 한번 출력한 메시지를 Session에서 삭제 --%>
+		<c:remove var="swalTitle"/>
+		<c:remove var="swalText"/>
+		<c:remove var="swalIcon"/>
+	</c:if>
+	
 	<!-- Navigation으로 된 header -->
 	<div class="header navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 		<div class="container">
@@ -46,15 +64,28 @@ body {
 					<li class="nav-item"><a class="nav-link" href="#">Board</a></li>
 
 
-					<!-- 헤더에 있는 login 버튼 클릭 시
-						 #modal-container-1 이라는 아이디를 가진 요소를
-						 보여지게 함.
-					 -->
-					<li class="nav-item active">
-						<a class="nav-link" data-toggle="modal" href="#modal-container-1">
-							Login
-						</a>
-					</li>
+					<c:choose>
+						<%-- 로그인이 되어있지 않을 때 == session에 loginMember라는 값이 없을 때 --%>
+						<c:when test="${empty sessionScope.loginMember }">
+							<!-- 헤더에 있는 login 버튼 클릭 시 #modal-container-1 이라는 아이디를 가진 요소를 보여지게 함. -->
+							<li class="nav-item active">
+								<a class="nav-link" data-toggle="modal" href="#modal-container-1">
+									Login
+								</a>
+							</li>
+						</c:when>
+						
+						<c:otherwise>
+							<li class="nav-item active">
+							<%-- 로그인 회원의 이름을 가져와 출력 --%>
+								<a class="nav-link" href="#">${loginMember.memberName }</a>
+							</li>
+							<li class="nav-item active">
+								<a class="nav-link" href="${contextPath}/member/logout.do">Logout</a>
+							</li>
+						</c:otherwise>
+						
+					</c:choose>
 
 
 				</ul>
