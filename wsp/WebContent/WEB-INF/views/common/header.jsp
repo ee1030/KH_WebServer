@@ -111,14 +111,19 @@ body {
 					<form class="form-signin" method="POST" action="${contextPath}/member/login.do">
 
 
-						<input type="text" class="form-control" id="memberId" name="memberId" placeholder="아이디" value="">
+						<input type="text" class="form-control" id="memberId" name="memberId" placeholder="아이디" value="${cookie.saveId.value}">
 						<br>
 						<input type="password" class="form-control" id="memberPwd" name="memberPwd" placeholder="비밀번호">
 						<br>
 
 						<div class="checkbox mb-3">
 							<label> 
-								<input type="checkbox" name="save" id="save"> 아이디 저장
+								<%-- Cookie에 저장된 아이디가 있을 경우 checked 속성 추가 --%>
+								<input type="checkbox" name="save" id="save"
+									<c:if test="${!empty cookie.saveId.value}">
+										checked
+									</c:if>
+								> 아이디 저장
 							</label>
 						</div>
 

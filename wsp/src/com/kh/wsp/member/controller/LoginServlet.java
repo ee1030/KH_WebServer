@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,6 +67,37 @@ public class LoginServlet extends HttpServlet {
 				
 				// 6-3. Session에 로그인 정보 추가
 				session.setAttribute("loginMember", loginMember);
+				
+				// cookie -> 사용자 컴퓨터에 저장
+				// session -> 서버에 저장
+				
+				// 서버가 접속한 브라우저 마다 session을 구분하는 방법
+				// -> 해당 브라우저의 쿠키 파일에 session을 구분할 수 있는
+				//	  session id를 저장 시켜 두었다가
+				//	  접속 될 때 마다 쿠키에서 자동으로 session id를 얻어감.
+				
+				// 6-4. 아이디를 Cookie에 저장 하기
+				
+				// 2) 쿠키 객체 생성
+				Cookie cookie = new Cookie("saveId", memberId);
+				
+				// 1) 아이디 저장 checkbox가 체크 되었는지 확인
+				if(save != null) {
+					
+					// 3) 1주일 동안 쿠키가 유효하도록 설정(쿠키 생명 주기 설정)
+					cookie.setMaxAge(60 * 60 * 24 * 7); // 초 단위 (7일)
+				} else {
+					// 4) 아이디 저장이 체크가 안된 경우 기존에 있던 쿠키 파일 삭제
+					cookie.setMaxAge(0); // 생성 되자마자 삭제
+				}
+				
+				// 5) 쿠키 유효 디렉토리 지정
+				cookie.setPath(request.getContextPath());
+											// /wsp
+				
+				// 6) 생성된 쿠키를 클라이언트로 전달(응답)
+				response.addCookie(cookie);
+				
 			} else {
 				// 7. 로그인이 실패 했을 때 "아이디 또는 비밀번호를 확인해주세요." 라고 경고창 띄우기
 				// -> Session에 "아이디 또는 비밀번호를 확인해주세요." 라는 문자열을 담아서 리다이렉트하기
