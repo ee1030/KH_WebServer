@@ -128,7 +128,7 @@ body {
 						</div>
 
 						<button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
-						<a class="btn btn-lg btn-secondary btn-block" href="#">회원가입</a>
+						<a class="btn btn-lg btn-secondary btn-block" href="${contextPath}/member/signUpForm.do">회원가입</a>
 					</form>
 				</div>
 				<div class="modal-footer">

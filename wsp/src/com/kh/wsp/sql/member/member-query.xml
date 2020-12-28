@@ -12,4 +12,9 @@ AND MEMBER_PWD = ?
 AND MEMBER_STATUS = 'Y'
 </entry>
 
+<entry key="signUp">
+INSERT INTO MEMBER
+VALUES(SEQ_MNO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, DEFAULT, DEFAULT, DEFAULT)
+</entry>
+
 </properties>
