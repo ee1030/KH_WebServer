@@ -24,7 +24,7 @@ public class MemberService {
 		Member loginMember = dao.loginMember(conn, member);
 		
 		// 3) Connection 반환하기
-		conn.close();
+		close(conn);
 		
 		// 4) DAO 수행 결과를 Controller로 반환
 		return loginMember;
@@ -47,9 +47,24 @@ public class MemberService {
 		else rollback(conn);
 		
 		// Connection 반환
-		conn.close();
+		close(conn);
 		
 		// 4) DAO 수행 결과를 Controller로 반환
+		return result;
+	}
+
+	/** 아이디 중복 검사 Service
+	 * @param id
+	 * @return result
+	 * @throws Exception
+	 */
+	public int idDupCheck(String id) throws Exception {
+		Connection conn = getConnection();
+		
+		int result = dao.idDupCheck(conn, id);
+		
+		close(conn);
+		
 		return result;
 	}
 

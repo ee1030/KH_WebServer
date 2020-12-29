@@ -17,4 +17,10 @@ INSERT INTO MEMBER
 VALUES(SEQ_MNO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, DEFAULT, DEFAULT, DEFAULT)
 </entry>
 
+<entry key="idDupCheck">
+SELECT COUNT(*) FROM MEMBER
+WHERE MEMBER_ID = ?
+AND MEMBER_STATUS = 'Y'
+</entry>
+
 </properties>
