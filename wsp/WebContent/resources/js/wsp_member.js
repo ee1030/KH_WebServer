@@ -163,3 +163,44 @@ $("#idDupCheck").on("click",function () {
 	window.open("idDupForm.do", "idDupForm","width=450, height=250");
 	 //			  팝업 주소		팝업창 name			설정
 });
+
+// -------------------------------------------------------------
+// 회원 정보 수정
+
+// 회원 정보 수정 유효성 검사
+function memberUpdateValidate() {
+    
+    // 각 유효성 검사를 저장할 객체
+    var updateCheck = {"phone2" : false,
+                        "email" : false};
+    var regExp1 = /^\d{3,4}$/;
+    var regExp2 = /^\d{4}$/;
+    var regExp3 = /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
+
+    // 전화번호 유효성 검사
+    var p2 = $("#phone2").val();
+    var p3 = $("#phone3").val();
+
+    if(!regExp1.test(p2) || !regExp2.test(p3)) {
+        updateCheck.phone2 = false;
+    } else {
+        updateCheck.phone2 = true;
+    }
+
+    // 이메일 유효성 검사
+    
+
+    if(!regExp.test($("#email").val())) {
+        updateCheck.email = false;
+    } else { 
+        updateCheck.email = true;
+    }
+
+    // updateCheck 내부에 저장된 값 검사
+    for(var key in updateCheck) {
+        if(!updateCheck[key]) {
+            swal("일부 값이 유효하지 않습니다.");
+            return false;
+        }
+    }
+}

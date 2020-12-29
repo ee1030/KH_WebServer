@@ -23,4 +23,10 @@ WHERE MEMBER_ID = ?
 AND MEMBER_STATUS = 'Y'
 </entry>
 
+<entry key="updateMember">
+UPDATE MEMBER
+SET MEMBER_EMAIL = ?, MEMBER_PHONE = ?, MEMBER_ADDR = ?, MEMBER_INTEREST = ?
+WHERE MEMBER_NO = ?
+</entry>
+
 </properties>
