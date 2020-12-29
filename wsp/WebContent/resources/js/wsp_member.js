@@ -24,6 +24,9 @@ $("#id").on("input", function() {
                     .css("color", "green");
         validateCheck.id = true;
     }
+
+    // 아이디가 입력 되는 경우 hidden 태그의 값을 false로 변경
+    $("#idDupcheck").val("false");
 });
 
 // 이름
@@ -121,6 +124,13 @@ $(".phone").on("input", function() {
 
 
 function validate() {
+
+    // 아이디 중복검사 여부 확인
+    if($("#idDup").val() != "true") {
+        swal("아이디 중복 검사를 진행해 주세요.");
+        $("#idDupCheck").focus();
+        return false;
+    }
 
     // 유효성 검사 여부 확인
     for(var key in validateCheck) {
