@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,10 +19,13 @@
 	<div class="container">
 		<jsp:include page="../common/header.jsp"></jsp:include>
 		
+		<%-- 전화번호, 주소를 구분자를 이용하여 분리된 배열 형태로 저장 --%>
+		<c:set var="phone" value="${fn:split(loginMember.memberPhone,'-')}"/>
+		<c:set var="address" value="${fn:split(loginMember.memberAddress,',')}"/>
 		
 
 		<div class="row my-5">
-			<jsp:include page="sideMenu.jsp"></jsp:include>		
+			<jsp:include page="sideMenu.jsp"></jsp:include>
 				
 			<div class="col-sm-8">
 				<h3>My Page</h3>
@@ -33,7 +38,7 @@
 								<h6>아이디</h6>
 							</div>
 							<div class="col-md-6">
-								<h5 id="id"> </h5>
+								<h5 id="id">${loginMember.memberId}</h5>
 							</div>
 						</div>
 	
@@ -43,7 +48,7 @@
 								<h6>이름</h6>
 							</div>
 							<div class="col-md-6">
-								<h5 id="name"> </h5>
+								<h5 id="name">${loginMember.memberName}</h5>
 							</div>
 						</div>
 	
@@ -66,12 +71,12 @@
 	
 							<!-- 전화번호2 -->
 							<div class="col-md-3">
-								<input type="number" class="form-control phone" id="phone2" name="phone2" value=" ">
+								<input type="number" class="form-control phone" id="phone2" name="phone2" value="${phone[1]}">
 							</div>
 	
 							<!-- 전화번호3 -->
 							<div class="col-md-3">
-								<input type="number" class="form-control phone" id="phone3" name="phone3" value=" ">
+								<input type="number" class="form-control phone" id="phone3" name="phone3" value="${phone[2]}">
 							</div>
 						</div>
 	
@@ -81,7 +86,7 @@
 								<label for="memberEmail">Email</label>
 							</div>
 							<div class="col-md-6">
-								<input type="email" class="form-control" id="email" name="email" value=" ">
+								<input type="email" class="form-control" id="email" name="email" value="${loginMember.memberEmail}">
 							</div>
 						</div>
 						<br>
@@ -94,7 +99,7 @@
 								<label for="postcodify_search_button">우편번호</label>
 							</div>
 							<div class="col-md-3">
-								<input type="text" name="post" class="form-control postcodify_postcode5" value=" ">
+								<input type="text" name="post" class="form-control postcodify_postcode5" value="${address[0]}">
 							</div>
 							<div class="col-md-3">
 								<button type="button" class="btn btn-primary" id="postcodify_search_button">검색</button>
@@ -106,7 +111,7 @@
 								<label for="address1">도로명 주소</label>
 							</div>
 							<div class="col-md-9">
-								<input type="text" class="form-control postcodify_address" name="address1" id="address1"  value=" ">
+								<input type="text" class="form-control postcodify_address" name="address1" id="address1"  value="${address[1]}">
 							</div>
 						</div>
 	
@@ -115,7 +120,7 @@
 								<label for="address2">상세주소</label>
 							</div>
 							<div class="col-md-9">
-								<input type="text" class="form-control postcodify_details" name="address2" id="address2"  value=" ">
+								<input type="text" class="form-control postcodify_details" name="address2" id="address2"  value="${address[2]}">
 							</div>
 						</div>
 	
