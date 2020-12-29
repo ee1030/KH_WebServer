@@ -78,7 +78,7 @@ body {
 						<c:otherwise>
 							<li class="nav-item active">
 							<%-- 로그인 회원의 이름을 가져와 출력 --%>
-								<a class="nav-link" href="#">${loginMember.memberName }</a>
+								<a class="nav-link" href="${contextPath}/member/myPage.do">${loginMember.memberName }</a>
 							</li>
 							<li class="nav-item active">
 								<a class="nav-link" href="${contextPath}/member/logout.do">Logout</a>

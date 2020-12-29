@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// 1. POST 방식으로 전달된 데이터의 문자 인코딩 변경
-		request.setCharacterEncoding("UTF-8");
+		// request.setCharacterEncoding("UTF-8");
 		
 		// 2. 파라미터를 꺼내서 변수에 저장
 		String memberId = request.getParameter("memberId");
