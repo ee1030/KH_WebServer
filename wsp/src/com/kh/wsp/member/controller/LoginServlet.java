@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
 			if(loginMember != null) {
 				
 				// 6-2. 30분 동안 동작이 없을 경우 Session을 만료시킴
-				session.setMaxInactiveInterval(60 * 1); // 테스트용 1분후 만료
+				session.setMaxInactiveInterval(60 * 10); // 테스트용 1분후 만료
 												// 초단위
 				
 				// 6-3. Session에 로그인 정보 추가

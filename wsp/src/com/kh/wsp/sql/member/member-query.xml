@@ -29,4 +29,16 @@ SET MEMBER_EMAIL = ?, MEMBER_PHONE = ?, MEMBER_ADDR = ?, MEMBER_INTEREST = ?
 WHERE MEMBER_NO = ?
 </entry>
 
+<entry key="checkCurrentPwd">
+SELECT COUNT(*) FROM MEMBER
+WHERE MEMBER_NO = ?
+AND MEMBER_PWD = ?
+</entry>
+
+<entry key="updatePwd">
+UPDATE MEMBER SET
+MEMBER_PWD = ?
+WHERE MEMBER_NO = ?
+</entry>
+
 </properties>

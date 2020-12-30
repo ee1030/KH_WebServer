@@ -86,4 +86,36 @@ public class MemberService {
 		return result;
 	}
 
+	/** 비밀번호 변경 Service
+	 * @param loginMember
+	 * @param newPwd
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updatePwd(Member loginMember, String newPwd) throws Exception {
+		Connection conn = getConnection();
+		
+		// 1) 현재 비밀번호가 일치하는 지 검사
+		int result = dao.checkCurrentPwd(conn, loginMember);
+		
+		// 2) 현재 비밀번호 일치 시 새 비밀번호로 수정
+		if(result > 0) { // 현재 비밀번호 일치하는 경우
+			
+			// loginMember의 비밀번호 필드에 newPwd를 세팅하여 재활용.
+			loginMember.setMemberPwd(newPwd);
+			
+			result = dao.updatePwd(conn, loginMember);
+			
+			if(result > 0) commit(conn);
+			else		   rollback(conn);
+		} else { // 현재 비밀번호 불일치
+			result = -1;
+		}
+		
+		close(conn);
+		
+		return result; // -1, 0, 1
+	}
+
+
 }
