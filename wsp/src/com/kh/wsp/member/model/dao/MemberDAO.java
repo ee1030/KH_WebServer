@@ -230,4 +230,28 @@ public class MemberDAO {
 		return result;
 	}
 
+	/** 회원 탈퇴 DAO
+	 * @param conn
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateStatus(Connection conn, Member loginMember) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateStatus");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, loginMember.getMemberNo());
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
 }

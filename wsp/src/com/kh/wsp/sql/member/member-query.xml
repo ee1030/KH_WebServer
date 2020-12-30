@@ -41,4 +41,10 @@ MEMBER_PWD = ?
 WHERE MEMBER_NO = ?
 </entry>
 
+<entry key="updateStatus">
+UPDATE MEMBER SET
+MEMBER_STATUS = 'N'
+WHERE MEMBER_NO = ?
+</entry>
+
 </properties>

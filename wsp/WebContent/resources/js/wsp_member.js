@@ -204,3 +204,35 @@ function memberUpdateValidate() {
         }
     }
 }
+
+// 비밀번호 수정 -----------------------------------------------------------------
+function pwdValidate() {
+    var regExp = /^[a-zA-Z\d]{6,12}$/;
+
+    if(!regExp.test($("#newPwd1").val())) {
+        swal("비밀번호 형식이 유효하지 않습니다.");
+        $("#newPwd1").focus();
+        return false;
+    }
+
+    // 새로운 비밀번호와 확인이 일치하지 않을 때
+    if($("#newPwd1").val() != $("#newPwd2").val()) {
+        swal("새로운 비밀번호가 일치하지 않습니다.");
+
+        $("#newPwd1").focus();
+        $("#newPwd1").val("");
+        $("#newPwd2").val("");
+        return false;
+    }
+}
+
+// 회원탈퇴 약관 동의 체크 확인 ----------------------------------------
+function secessionValidate() {
+    if(!$("#agree").prop("checked")) {
+        // #agree 체크박스가 체크되어 있지 않다면
+        swal("약관에 동의해 주세요.")
+        return false;
+    } else {
+        return confirm("정말로 탈퇴 하시겠습니까?");
+    }
+}

@@ -27,7 +27,6 @@ public class UpdatePwdServlet extends HttpServlet {
 		
 		try {
 			loginMember.setMemberPwd(currentPwd);
-			System.out.println(loginMember.getMemberPwd());
 			// 비즈니스 로직 처리 후 결과 반환 받기
 			int result = new MemberService().updatePwd(loginMember, newPwd);
 			

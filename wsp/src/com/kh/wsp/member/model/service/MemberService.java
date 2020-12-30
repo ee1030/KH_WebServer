@@ -117,5 +117,27 @@ public class MemberService {
 		return result; // -1, 0, 1
 	}
 
+	/** 회원 탈퇴 Service
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateStatus(Member loginMember) throws Exception {
+		Connection conn = getConnection();
+		
+		int result = dao.checkCurrentPwd(conn, loginMember);
+		
+		if(result > 0) {
+			result = dao.updateStatus(conn, loginMember);
+			
+			if(result > 0) commit(conn);
+			else rollback(conn);
+		} else {
+			result = -1;
+		}
+		
+		return result;
+	}
+
 
 }
