@@ -2,8 +2,9 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
-<entry key="">
-
+<entry key="selectList">
+SELECT * FROM V_NOTICE_LIST
+WHERE NOTICE_FL = 'Y'
 </entry>
 
 </properties>

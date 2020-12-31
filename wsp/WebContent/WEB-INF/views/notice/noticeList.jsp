@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,6 +60,26 @@ input[name='searchValue']{
 
 				<tbody>
 					<!-- 공지사항 목록 -->
+					<%-- 공지사항이 존재할 때와 존재하지 않을 때에 맞는 출력 형식을 지정해야 함. --%>
+					<c:choose>
+						<c:when test="${empty list}">
+							<tr>
+								<td colspan="5" align="center">존재하는 공지사항이 없습니다.</td>
+							</tr>
+						</c:when>
+						<%-- 공지사항이 존재할 때 --%>
+						<c:otherwise>
+							<c:forEach var="notice" items="${list}">
+								<tr>
+									<td>${notice.noticeNo}</td>
+									<td>${notice.noticeTitle}</td>
+									<td>${notice.memberId}</td>
+									<td>${notice.readCount}</td>
+									<td>${notice.noticeCreateDate}</td>
+								</tr>
+							</c:forEach>
+						</c:otherwise>
+					</c:choose>
 				</tbody>
 			</table>
 		</div>
