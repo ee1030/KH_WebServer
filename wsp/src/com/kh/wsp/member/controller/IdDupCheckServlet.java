@@ -27,11 +27,14 @@ public class IdDupCheckServlet extends HttpServlet {
 			// 1) 비즈니스 로직 호출하여 결과 반환 받기
 			int result = new MemberService().idDupCheck(id);
 			
+			// 팝업창 중복 검사 시
 			// 2) 반환 결과를 request에 세팅하여 요청 위임 진행
-			request.setAttribute("result", result);
+			//request.setAttribute("result", result);
+			//RequestDispatcher view = request.getRequestDispatcher("idDupForm.do");
+			//view.forward(request, response);
 			
-			RequestDispatcher view = request.getRequestDispatcher("idDupForm.do");
-			view.forward(request, response);
+			// Ajax로 중복 검사 시
+			response.getWriter().print(result);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -60,7 +60,7 @@ body {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a class="nav-link" href="#">Notice</a></li>
+					<li class="nav-item"><a class="nav-link" href="${contextPath}/notice/list.do">Notice</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">Board</a></li>
 
 

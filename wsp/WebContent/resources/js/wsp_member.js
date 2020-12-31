@@ -20,13 +20,36 @@ $("#id").on("input", function() {
                     .css("color", "red");
         validateCheck.id = false;
     } else {
-        $("#checkId").text("유효한 아이디 형식입니다.")
+        // $("#checkId").text("유효한 아이디 형식입니다.").css("color", "green");
+
+        // ajax를 이용한 실시간 아이디 중복 검사
+        $.ajax({
+            url : "idDupCheck.do",
+            data : {"id" : value},
+            type : "post",
+            
+            success : function(result) {
+                // $("#checkId").text("유효한 아이디 형식입니다.").css("color", "green");
+
+                if(result == 0) { //중복되지 않은 경우
+                    $("#checkId").text("사용 가능한 아이디 입니다.")
                     .css("color", "green");
-        validateCheck.id = true;
+                    validateCheck.id = true;
+                } else {
+                    $("#checkId").text("이미 사용 중인 아이디 입니다.")
+                    .css("color", "red");
+                    validateCheck.id = false;
+                }
+                
+            },
+            error : function() {
+                console.log("아이디 중복 검사 실패");
+            }
+        });
     }
 
     // 아이디가 입력 되는 경우 hidden 태그의 값을 false로 변경
-    $("#idDupcheck").val("false");
+    // $("#idDupcheck").val("false");
 });
 
 // 이름
@@ -126,11 +149,11 @@ $(".phone").on("input", function() {
 function validate() {
 
     // 아이디 중복검사 여부 확인
-    if($("#idDup").val() != "true") {
+    /*if($("#idDup").val() != "true") {
         swal("아이디 중복 검사를 진행해 주세요.");
         $("#idDupCheck").focus();
         return false;
-    }
+    }*/
 
     // 유효성 검사 여부 확인
     for(var key in validateCheck) {

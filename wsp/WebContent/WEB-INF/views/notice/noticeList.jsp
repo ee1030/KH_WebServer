@@ -1,0 +1,106 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>공지사항</title>
+<style>
+.pagination {
+	justify-content: center;
+}
+
+
+/* 검색창 스타일 */
+#searchForm > * {
+	top: 0;
+	vertical-align: top;
+}
+
+select[name='searchKey']{
+	width: 100px; 
+	display: inline-block;
+}
+
+input[name='searchValue']{
+	width: 25%; 
+	display: inline-block;
+}
+
+#searchBtn{
+	width: 100px; 
+	display: inline-block;
+}
+
+.list-wrapper{
+	height: 540px;
+}
+
+
+</style>
+
+</head>
+<body>
+	<jsp:include page="../common/header.jsp"></jsp:include>
+	<div class="container my-5 ">
+	
+		<h1>공지사항</h1>
+
+		<div class="list-wrapper">
+			<table class="table table-hover table-striped my-5" id="list-table">
+				<thead>
+					<tr>
+						<th>글번호</th>
+						<th>제목</th>
+						<th>작성자</th>
+						<th>조회수</th>
+						<th>작성일</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<!-- 공지사항 목록 -->
+				</tbody>
+			</table>
+		</div>
+
+
+		<%-- 로그인된 계정이 관리자 등급인 경우 --%>
+		<button type="button" class="btn btn-primary float-right" id="insertBtn" onclick="location.href = 'insertForm.do';">글쓰기</button>
+
+
+		<div class="my-5">
+			<ul class="pagination">
+				<li><a class="page-link" href="#">&lt;</a></li>
+				<li><a class="page-link" href="#">1</a></li>
+				<li><a class="page-link" href="#">2</a></li>
+				<li><a class="page-link" href="#">3</a></li>
+				<li><a class="page-link" href="#">4</a></li>
+				<li><a class="page-link" href="#">5</a></li>
+				<li><a class="page-link" href="#">&gt;</a></li>
+			</ul>
+		</div>
+
+		<div class="mb-5">
+			<form action="search" method="GET" class="text-center" id="searchForm">
+				<select name="searchKey" class="form-control">
+					<option value="title">글제목</option>
+					<option value="content">내용</option>
+					<option value="titcont">제목+내용</option>
+				</select>
+				<input type="text" name="searchValue" class="form-control">
+				<button class="form-control btn btn-primary" id="searchBtn">검색</button>
+			</form>
+
+
+		</div>
+	</div>
+	<jsp:include page="../common/footer.jsp"></jsp:include>
+
+	<script>
+		// 공지사항 상세보기 기능 (jquery를 통해 작업)
+		
+	</script>
+
+
+</body>
+</html>
