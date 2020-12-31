@@ -45,3 +45,90 @@ $("#inputId").on("input", function() {
         }
     });
 });
+
+// 2. 버튼 클릭시 POST 방식으로 서버에 입력 값 전달 및 응답
+$("#jqBtn2").on("click", function() {
+
+    $.ajax({
+        url : "jqTest2.do", // 요청 주소 (필수)
+        data : {"input" : $("#input2").val()}, // 요청 시 전달할 값
+        type : "post", // 데이터 전달 방식(GET / POST)
+        
+        // dataType : 응답 데이터의 형식을 지정해주는 속성.
+        // -> 미작성시 어느정도 자동으로 판별하여 지정됨.
+        dataType : "text",
+        success : function(result) { // 통신 성공 시
+            $("#result-area").html(result);
+        },
+
+        error : function() {
+            console.log("ajax 통신 실패");
+        }
+    });
+});
+
+
+// 3. 서버로 기본형 데이터 전송 후, 응답을 객체(Object)로 받기
+$("#jqBtn3").on("click", function() {
+
+    $.ajax({
+        url : "jqTest3.do",
+        data : {"input" : $("#input3").val()},
+        type : "get",
+        dataType : "json", // 응답되는 데이터가 JSON 형태임을 인식 시키는 방법3
+
+        success : function(user) {
+            // {"no":1,"gender":"남","name":"박철수","age":30}
+
+            // 응답되는 데이터가 JSON 형태임을 인식 시키는 방법 2
+            // user = JSON.parse(user);
+            console.log(user);
+
+            var  result = "";
+
+            if(user != null) {
+                result = "번호 : " + user.no + "<br>"
+                        + "이름 : " + user.name + "<br>"
+                        + "나이 : " + user.age + "<br>"
+                        + "성별 : " + user.gender;
+            } else {
+                result = "일치하는 사용자가 없습니다.";
+            }
+
+            $("#result-area").html(result);
+        },
+
+        error : function() {
+            console.log("ajax 통신 실패");
+        }
+
+    });
+});
+
+// 실시간 회원 정보 조회
+$("#selectMemberBtn").on("click", function() {
+    $.ajax({
+        url : "member/selectMember.do",
+        data : {"inputId" : $("#inputId2").val()},
+        type : "get",
+        dataType : "json",
+        success : function(member) {
+            console.log(member);
+
+            if(member != null) {
+                var result = "";
+
+                result += "<h4>" + member.memberId + "</h4>";
+                result += "이름 : " + member.memberName + "<br>";
+                result += "이메일 : " + member.memberEmail + "<br>";
+                result += "관심 분야 : " + member.memberInterest + "<br>";
+                result += "가입일 : " + member.memberEnrollDate + "<br>";
+
+                $("#result-area").html(result);
+            }
+        },
+        error : function() {
+            console.log("회원 정보 조회 중 오류 발생");
+        }
+    });
+});
