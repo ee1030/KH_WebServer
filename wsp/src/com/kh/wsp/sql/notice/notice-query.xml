@@ -35,4 +35,19 @@ INSERT INTO NOTICE(NOTICE_NO, NOTICE_TITLE, NOTICE_CONTENT, NOTICE_WRITER)
 VALUES(?, ?, ?, ?)
 </entry>
 
+<!-- 공지사항 수정 -->
+<entry key="updateNotice">
+UPDATE NOTICE SET
+NOTICE_TITLE = ?,
+NOTICE_CONTENT = ?
+WHERE NOTICE_NO = ?
+</entry>
+
+<!-- 공지사항 삭제 -->
+<entry key="updateNoticeFl">
+UPDATE NOTICE SET
+NOTICE_FL = 'N'
+WHERE NOTICE_NO = ?
+</entry>
+
 </properties>

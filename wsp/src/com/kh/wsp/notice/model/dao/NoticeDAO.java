@@ -182,4 +182,54 @@ public class NoticeDAO {
 		
 		return result;
 	}
+
+	/** 공지사항 수정 DAO
+	 * @param conn
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateNotice(Connection conn, Map<String, Object> map) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateNotice");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, (String)map.get("noticeTitle"));
+			pstmt.setString(2, (String)map.get("noticeContent"));
+			pstmt.setInt(3,  (int)map.get("noticeNo"));
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 공지사항 삭제 DAO
+	 * @param conn
+	 * @param noticeNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateNoticeFl(Connection conn, int noticeNo) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateNoticeFl");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, noticeNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
 }

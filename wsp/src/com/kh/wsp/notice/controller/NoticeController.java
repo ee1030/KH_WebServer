@@ -142,6 +142,91 @@ public class NoticeController extends HttpServlet {
 				response.sendRedirect(path);
 			}
 			
+			// 공지사항 수정 화면 출력용 Controller ****************************************
+			else if(command.equals("/updateForm.do")) {
+				errorMsg = "공지사항 수정화면 전환 과정에서 오류 발생";
+				
+				int noticeNo = Integer.parseInt(request.getParameter("no"));
+				
+				Notice notice = service.updateView(noticeNo);
+				
+				if(notice != null) {
+					path = "/WEB-INF/views/notice/noticeUpdate.jsp";
+					request.setAttribute("notice", notice);
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+					
+				} else {
+					request.getSession().setAttribute("swalIcon", "error");
+					request.getSession().setAttribute("swalText", "공지사항 수정을 위한 조회 실패");
+					
+					response.sendRedirect("view.do?no=" + noticeNo);
+				}
+			}
+			
+			// 공지사항 수정 Controller ******************************************
+			else if(command.equals("/update.do")) {
+				
+				errorMsg = "공지사항 수정 과정에서 오류 발생";
+				
+				// 파라미터 얻어오기
+				int noticeNo = Integer.parseInt(request.getParameter("no"));				
+				String noticeTitle = request.getParameter("noticeTitle");
+				String noticeContent = request.getParameter("noticeContent");
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("noticeNo", noticeNo);
+				map.put("noticeTitle", noticeTitle);
+				map.put("noticeContent", noticeContent);
+				
+				// 비즈니스 로직 수행
+				int result = service.updateNotice(map);
+				
+				// 로직 수행 성공 시 "공지사항이 수정되었습니다." swal 출력
+				// 로직 수행 실패 시 "공지사항 수정 실패" swal 출력
+				if(result > 0) { 
+					swalIcon = "success";
+					swalTitle = "공지사항이 수정되었습니다.";
+				} else {
+					swalIcon = "error";
+					swalTitle = "공지사항 수정 실패";
+				}
+				
+				request.getSession().setAttribute("swalIcon", swalIcon);
+				request.getSession().setAttribute("swalTitle", swalTitle);
+				
+				// 수정된 공지사항 상세조회로 redirect
+
+				response.sendRedirect("view.do?no=" + noticeNo);
+			}
+			
+			// 공지사항 삭제 Contorller ***********************************
+			else if(command.equals("/delete.do")) {
+				errorMsg = "공지사항 삭제 과정에서 오류 발생";
+				
+				int noticeNo = Integer.parseInt(request.getParameter("no"));
+				
+				// 비즈니스 로직 수행
+				int result = service.updateNoticeFl(noticeNo);
+				
+				if(result > 0) {
+					swalIcon = "success";
+					swalTitle = "공지사항이 삭제되었습니다.";
+					path = "list.do";
+				} else {
+					swalIcon = "error";
+					swalTitle = "공지사항이 삭제 실패";
+					path = request.getHeader("referer");
+				}
+				
+				request.getSession().setAttribute("swalIcon", swalIcon);
+				request.getSession().setAttribute("swalTitle", swalTitle);
+				
+				response.sendRedirect(path);
+				
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			path = "/WEB-INF/views/common/errorPage.jsp";

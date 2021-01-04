@@ -121,4 +121,68 @@ public class NoticeService {
 		
 		return result;
 	}
+
+	/** 공지사항 수정 화면 Service
+	 * @param noticeNo
+	 * @return notice
+	 * @throws Exception
+	 */
+	public Notice updateView(int noticeNo) throws Exception {
+		Connection conn = getConnection();
+		
+		// 공지사항 상세조회 DAO 메소드 호출
+		Notice notice = dao.selectNotice(conn, noticeNo);
+		
+		// textarea에 출력하기 위해 개행문자 변경
+		if(notice != null) {
+			notice.setNoticeContent(notice.getNoticeContent().replaceAll("<br>", "\r\n"));
+		}
+		
+		close(conn);
+		
+		return notice;
+	}
+
+	/** 공지사항 수정 Service
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateNotice(Map<String, Object> map) throws Exception {
+		Connection conn = getConnection();
+		
+		map.put("noticeTitle", replaceParameter((String)map.get("noticeTitle")));
+		map.put("noticeContent", replaceParameter((String)map.get("noticeContent")));
+		
+		map.put("noticeContent",
+				((String)map.get("noticeContent")).replaceAll("\r\n", "<br>"));
+		
+		int result = dao.updateNotice(conn, map);
+		
+		if(result > 0) {
+			commit(conn);		
+		} else {
+			rollback(conn);
+		}
+		
+		return result;
+	}
+
+	/** 공지사항 삭제 Service
+	 * @param noticeNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateNoticeFl(int noticeNo) throws Exception {
+		Connection conn = getConnection();
+		
+		int result = dao.updateNoticeFl(conn, noticeNo);
+		
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		
+		close(conn);
+		
+		return result;
+	}
 }
