@@ -36,6 +36,10 @@ input[name='searchValue']{
 	height: 540px;
 }
 
+/* 목록에 마우스를 올릴 경우 손가락 모양으로 변경 */
+#list-table td:hover {
+	cursor : pointer;
+}
 
 </style>
 
@@ -86,8 +90,9 @@ input[name='searchValue']{
 
 
 		<%-- 로그인된 계정이 관리자 등급인 경우 --%>
+	<c:if test="${!empty loginMember && loginMember.memberGrade == 'A'}">
 		<button type="button" class="btn btn-primary float-right" id="insertBtn" onclick="location.href = 'insertForm.do';">글쓰기</button>
-
+	</c:if>
 
 		<div class="my-5">
 			<ul class="pagination">
@@ -119,7 +124,13 @@ input[name='searchValue']{
 
 	<script>
 		// 공지사항 상세보기 기능 (jquery를 통해 작업)
-		
+		$("#list-table td").on("click", function() {
+			var noticeNo = $(this).parent().children().eq(0).text();
+			// console.log(noticeNo);
+			
+			// 얻어온 공지사항 글 번호를 쿼리스트링으로 작성하여 상세 조회 요청
+			location.href = "${contextPath}/notice/view.do?no=" + noticeNo;
+		});
 	</script>
 
 

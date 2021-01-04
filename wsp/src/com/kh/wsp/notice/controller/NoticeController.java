@@ -1,7 +1,9 @@
 package com.kh.wsp.notice.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,7 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.kh.wsp.member.model.vo.Member;
 import com.kh.wsp.notice.model.service.NoticeService;
 import com.kh.wsp.notice.model.vo.Notice;
 
@@ -67,6 +71,75 @@ public class NoticeController extends HttpServlet {
 				// 요청 위임 객체 생성 후 위임 진행
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
+			}
+			// 공지사항 상세 조회 Controller ****************************************
+			else if(command.equals("/view.do")) {
+				errorMsg = "공지사항 상세 조회 과정에서 오류 발생";
+				
+				// 쿼리스트링으로 전달된 공지사항 번호를 int형으로 파싱하여 저장
+				int noticeNo = Integer.parseInt(request.getParameter("no"));
+				
+				// 상세조회 비즈니스 로직 수행 결과 반환
+				Notice notice = service.selectNotice(noticeNo);
+				
+				// 조회 결과에 따른 view 연결 처리
+				if(notice != null) {
+					path = "/WEB-INF/views/notice/noticeView.jsp";
+					request.setAttribute("notice", notice);
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+					
+				} else { // 조회 실패
+					HttpSession session = request.getSession();
+					session.setAttribute("swalIcon", "error");
+					session.setAttribute("swalTitle", "공지사항 조회 실패");
+					response.sendRedirect(request.getHeader("referer"));
+				}
+			}
+			
+			// 공지사항 작성 화면 전환 Controller ****************************************
+			else if(command.equals("/insertForm.do")) {
+				path = "/WEB-INF/views/notice/noticeInsert.jsp";
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+			
+			// 공지사항 작성 Controller ****************************************
+			else if(command.equals("/insert.do")) {
+				errorMsg = "공지사항 등록 과정에서 오류 발생";
+				
+				// 파라미터로 전달된 값 저장
+				String noticeTitle = request.getParameter("noticeTitle");
+				String noticeContent = request.getParameter("noticeContent");
+				
+				// 세션에서 회원 번호 얻어오기
+				HttpSession session = request.getSession();
+				int noticeWriter = ((Member)session.getAttribute("loginMember")).getMemberNo();
+				
+				// Map을 이용하여 데이터 전달(VO 대신 사용하는 경우가 많음)
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("noticeTitle", noticeTitle);
+				map.put("noticeContent", noticeContent);
+				map.put("noticeWriter", noticeWriter);
+				
+				// 공지사항 등록 비즈니스 로직 수행 후 결과 반환
+				int result = service.insertNotice(map);
+				
+				if(result > 0) { // 삽입 성공 시
+					// result에는 삽입된 공지사항 번호가 저장되어 있음.
+					path = "view.do?no=" + result; // 쿼리 스트링을 이용하여 상세조회 요청
+					swalIcon = "success";
+					swalTitle = "공지사항이 등록되었습니다.";
+				} else {
+					path = "list.do";
+					swalIcon = "error";
+					swalTitle = "공지사항 등록 실패";
+				}
+				
+				session.setAttribute("swalIcon", swalIcon);
+				session.setAttribute("swalTitle", swalTitle);
+				
+				response.sendRedirect(path);
 			}
 			
 		} catch (Exception e) {

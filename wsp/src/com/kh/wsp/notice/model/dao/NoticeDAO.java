@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import com.kh.wsp.notice.model.vo.Notice;
@@ -69,5 +70,116 @@ public class NoticeDAO {
 		}
 		
 		return list;
+	}
+
+	/** 공지사항 상세조회 DAO
+	 * @param conn
+	 * @param noticeNo
+	 * @return notice
+	 * @throws Exception
+	 */
+	public Notice selectNotice(Connection conn, int noticeNo) throws Exception{
+		Notice notice = null;
+		
+		String query = prop.getProperty("selectNotice");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, noticeNo);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				notice = new Notice();
+				notice.setNoticeTitle(rset.getString("NOTICE_TITLE"));
+				notice.setNoticeContent(rset.getString("NOTICE_CONTENT"));
+				notice.setMemberId(rset.getString("MEMBER_ID"));
+				notice.setReadCount(rset.getInt("READ_COUNT"));
+				notice.setNoticeCreateDate(rset.getDate("NOTICE_CREATE_DT"));
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return notice;
+	}
+
+	/** 조회수 증가 DAO
+	 * @param conn
+	 * @param noticeNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int increaseReadCount(Connection conn, int noticeNo) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("increaseReadCount");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, noticeNo);
+			
+			result = pstmt.executeUpdate();
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 공지사항 등록 시 사용 될 번호 반환용 DAO
+	 * @param conn
+	 * @param map
+	 * @return noticeNo
+	 * @throws Exception
+	 */
+	public int selectNextNo(Connection conn) throws Exception {
+		int noticeNo = 0;
+		
+		String query = prop.getProperty("selectNextNo");
+		
+		try {
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(query);
+			
+			if(rset.next()) {
+				noticeNo = rset.getInt(1);
+			}
+			
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		return noticeNo;
+	}
+
+	/** 공지사항 작성 DAO
+	 * @param conn
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertNotice(Connection conn, Map<String, Object> map) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("insertNotice");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, (int)map.get("noticeNo"));
+			pstmt.setString(2, (String)map.get("noticeTitle"));
+			pstmt.setString(3, (String)map.get("noticeContent"));
+			pstmt.setInt(4, (int)map.get("noticeWriter"));
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
 	}
 }

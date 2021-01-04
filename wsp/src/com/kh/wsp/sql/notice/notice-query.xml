@@ -2,9 +2,37 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
+<!-- 공지사항 목록 조회 -->
 <entry key="selectList">
 SELECT * FROM V_NOTICE_LIST
 WHERE NOTICE_FL = 'Y'
+</entry>
+
+<!-- 공지사항 상제 조회 -->
+<entry key="selectNotice">
+SELECT NOTICE_TITLE, NOTICE_CONTENT, MEMBER_ID, READ_COUNT, NOTICE_CREATE_DT
+FROM NOTICE
+JOIN MEMBER ON(NOTICE_WRITER = MEMBER_NO)
+WHERE NOTICE_NO = ?
+AND NOTICE_FL = 'Y'
+</entry>
+
+<!-- 조회수 증가 -->
+<entry key="increaseReadCount">
+UPDATE NOTICE SET
+READ_COUNT = READ_COUNT + 1
+WHERE NOTICE_NO = ?
+</entry>
+
+<!-- 다음 번호 얻어오기 -->
+<entry key="selectNextNo">
+SELECT SEQ_NNO.NEXTVAL FROM DUAL
+</entry>
+
+<!-- 공지사항 등록 -->
+<entry key="insertNotice">
+INSERT INTO NOTICE(NOTICE_NO, NOTICE_TITLE, NOTICE_CONTENT, NOTICE_WRITER)
+VALUES(?, ?, ?, ?)
 </entry>
 
 </properties>
