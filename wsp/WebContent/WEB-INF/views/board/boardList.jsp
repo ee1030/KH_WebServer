@@ -161,8 +161,8 @@
 						</c:choose>
 					</c:forEach>
 					
-					<%-- 현재 페이지가 마지막 페이지 미만인 경우 --%>
-					<c:if test="${pInfo.currentPage <= pInfo.maxPage}">
+					<%-- 다음 페이지가 마지막 페이지 미만인 경우 --%>
+					<c:if test="${next < pInfo.maxPage}">
 						<li> <!-- 다음 페이지로 이동(>) -->
 							<a class="page-link" href="${nextPage}">&gt;</a>
 						</li>
