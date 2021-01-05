@@ -16,9 +16,9 @@ import javax.servlet.annotation.WebFilter;
 @WebFilter(filterName = "encoding", urlPatterns = "/*")
 public class EncodingFilter implements Filter {
 
-    public EncodingFilter() {
-
-    }
+    public EncodingFilter() {}
+    public void init(FilterConfig fConfig) throws ServletException {}
+    public void destroy() {}
 
 	// filter 생명 주기
     // init() -> doFilter() -> destory()
@@ -33,14 +33,6 @@ public class EncodingFilter implements Filter {
 		chain.doFilter(request, response);
 	}
 
-	public void init(FilterConfig fConfig) throws ServletException {
 
-	}
-
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
