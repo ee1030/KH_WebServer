@@ -21,6 +21,10 @@ public class PageInfo { // 페이징 처리를 위한 값을 저장할 객체
 		super();
 		this.currentPage = currentPage;
 		this.listCount = listCount;
+		
+		// 전달받은 값과 명시적으로 선언된 값을 이용하여
+		// makePageInfo() 수행
+		makePageInfo();
 	}
 
 	public PageInfo(int currentPage, int listCount, int limit, int pageSize) {
@@ -29,6 +33,8 @@ public class PageInfo { // 페이징 처리를 위한 값을 저장할 객체
 		this.listCount = listCount;
 		this.limit = limit;
 		this.pageSize = pageSize;
+		
+		makePageInfo();
 	}
 
 	public int getCurrentPage() {
@@ -45,6 +51,7 @@ public class PageInfo { // 페이징 처리를 위한 값을 저장할 객체
 
 	public void setListCount(int listCount) {
 		this.listCount = listCount;
+		makePageInfo();
 	}
 
 	public int getLimit() {
@@ -53,6 +60,8 @@ public class PageInfo { // 페이징 처리를 위한 값을 저장할 객체
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+		
+		makePageInfo();
 	}
 
 	public int getPageSize() {
@@ -61,6 +70,8 @@ public class PageInfo { // 페이징 처리를 위한 값을 저장할 객체
 
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+		
+		makePageInfo();
 	}
 
 	public int getMaxPage() {
@@ -94,4 +105,32 @@ public class PageInfo { // 페이징 처리를 위한 값을 저장할 객체
 	}
 
 	// 페이징 처리에 필요한 값을 계산하는 메소드
+	private void makePageInfo() {
+		
+		// maxPage : 총 페이지 수 == 마지막 페이지
+		// 총 게시글 수 101개, 한 페이지에 보여지는 게시글 수 10개
+		// -> 총 페이지 수는 ? 101 / 10 = 10.1(올림처리) -> 11page
+		maxPage = (int)Math.ceil((double)listCount / limit);
+		
+		// startPage : 페이징바 시작 번호
+		// 페이징바에 페이지를 10개씩 보여줄 경우
+		// 1, 11, 21, 31, ...
+		// 현재 페이지 11p -> 시작 페이지 11
+		// 현재 페이지 15p -> 시작 페이지 11
+		// 현재 페이지 20p -> 시작 페이지 11
+		startPage = (currentPage - 1) / pageSize * pageSize + 1;
+		
+		// endPage : 페이징바의 끝 번호
+		// 페이징바에 페이지를 10개씩 보여줄 경우
+		// 10, 20, 30, 40, ...
+		// 현재 페이지 11p -> 끝 페이지 20
+		// 현재 페이지 15p -> 끝 페이지 20
+		// 현재 페이지 20p -> 끝 페이지 20
+		endPage = startPage + pageSize - 1;
+		
+		// 총 페이지의 수가 end페이지 보다 작을 경우
+		if(maxPage <= endPage) {
+			endPage = maxPage;
+		}
+	}
 }
