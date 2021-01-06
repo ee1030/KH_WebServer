@@ -182,7 +182,7 @@
 		
 				<!-- 검색창 -->
 			<div class="my-5">
-				<form action="${contextPath }/search.do" method="GET" class="text-center" id="searchForm">
+				<form action="${contextPath}/search.do" method="GET" class="text-center" id="searchForm">
 					<select name="sk" class="form-control" style="width: 100px; display: inline-block;">
 						<option value="title">글제목</option>
 						<option value="content">내용</option>
