@@ -103,4 +103,66 @@ public class BoardDAO {
 		return bList;
 	}
 
+	/** 게시글 상세조회 DAO
+	 * @param conn
+	 * @param boardNo
+	 * @return board
+	 * @throws Exception
+	 */
+	public Board selectBoard(Connection conn, int boardNo) throws Exception {
+		Board board = null;
+		
+		String query = prop.getProperty("selectBoard");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, boardNo);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				board = new Board();
+				
+				board.setBoardNo(rset.getInt("BOARD_NO"));
+				board.setBoardTitle(rset.getString("BOARD_TITLE"));
+				board.setBoardContent(rset.getString("BOARD_CONTENT"));
+				board.setMemberId(rset.getString("MEMBER_ID"));
+				board.setReadCount(rset.getInt("READ_COUNT"));
+				board.setBoardCreateDate(rset.getTimestamp("BOARD_CREATE_DT"));
+				board.setBoardModifyDate(rset.getTimestamp("BOARD_MODIFY_DT"));
+				board.setCategoryName(rset.getString("CATEGORY_NM"));
+			}
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return board;
+	}
+
+	/** 조회수 증가 DAO
+	 * @param conn
+	 * @param boardNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int increaseReadCount(Connection conn, int boardNo) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("increaseReadCount");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, boardNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
 }

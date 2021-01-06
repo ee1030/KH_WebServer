@@ -17,4 +17,17 @@ SELECT * FROM
 WHERE RNUM BETWEEN ? AND ?
 </entry>
 
+<!-- 게시글 상세조회 -->
+<entry key="selectBoard">
+SELECT * FROM V_BOARD
+WHERE BOARD_NO = ?
+AND BOARD_STATUS = 'Y'
+</entry>
+
+<!-- 조회수 증가 -->
+<entry key="increaseReadCount">
+UPDATE BOARD SET
+READ_COUNT = READ_COUNT + 1
+WHERE BOARD_NO = ?
+</entry>
 </properties>

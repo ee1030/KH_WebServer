@@ -37,6 +37,11 @@
 	height: 540px;
 }
 
+#list-table td:hover {
+	cursor: pointer;
+}
+
+
 </style>
 
 </head>
@@ -196,6 +201,17 @@
 
 	<script>
 		// 게시글 상세보기 기능 (jquery를 통해 작업)
+		
+		$("#list-table td").on("click", function() {
+			// 게시글 번호 얻어오기
+			var boardNo = $(this).parent().children().eq(0).text();
+			//console.log(boardNo);
+			
+			var url = "${contextPath}/board/view.do?cp=${pInfo.currentPage}&no=" + boardNo;
+			
+			location.href = url;
+		});
+		
 	</script>
 </body>
 </html>

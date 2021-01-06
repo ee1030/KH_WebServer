@@ -65,6 +65,28 @@ public class BoardController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
+			// 게시글 상세 조회 Controller *********************************************
+			else if(command.equals("/view.do")) {
+				errorMsg = "게시글 상제 조회 과정에서 오류 발생";
+				
+				int boardNo = Integer.parseInt(request.getParameter("no"));
+				
+				// 상세 비즈니스 로직 수행 후 결과 반환 받기
+				Board board = service.selectBoard(boardNo);
+				
+				if(board != null) { // 상세조회 성공시
+					path = "/WEB-INF/views/board/boardView.jsp";
+					request.setAttribute("board", board);
+					
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+				} else {
+					request.getSession().setAttribute("swalIcon", "error");
+					request.getSession().setAttribute("swalTitle", "게시글 상세조회 실패");
+					response.sendRedirect("list.do?cp=1");
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			path = "/WEB-INF/views/common/errorPage.jsp";

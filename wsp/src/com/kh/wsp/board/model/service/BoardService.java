@@ -48,4 +48,35 @@ public class BoardService {
 		
 		return bList;
 	}
+
+	/** 게시글 상세조회 Service
+	 * @param boardNo
+	 * @return board
+	 * @throws Exception
+	 */
+	public Board selectBoard(int boardNo) throws Exception {
+		Connection conn = getConnection();
+		
+		Board board = dao.selectBoard(conn, boardNo);
+		
+		if(board != null) { // DB에서 조회 성공 시
+			
+			// 조회수 증가
+			int result = dao.increaseReadCount(conn, boardNo);
+			
+			if(result > 0) {
+				commit(conn);
+				
+				// 반환되는 Board 데이터에는 조회수가 증가되어 있지 않기 때문에
+				// 조회수를 1 증가 시켜줌
+				board.setReadCount(board.getReadCount()+1);
+			} else {
+				rollback(conn);
+			}
+		}
+		
+		close(conn);
+		
+		return board;
+	}
 }
