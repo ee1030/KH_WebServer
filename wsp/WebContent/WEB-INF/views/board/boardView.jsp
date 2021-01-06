@@ -118,9 +118,27 @@
 						<a href="#" class="btn btn-primary float-right ml-1 mr-1">수정</a>
 					</c:if>
 					
-					<c:url var="goToList" value="list.do">
-						<c:param name="cp">${param.cp}</c:param>
-					</c:url>
+					<%--
+						상대경로 작성법 
+						- 앞에 아무것도 없음 : 현재 위치(주소 제일 마지막 / 뒷부분)
+						- .. : 현재 위치에서 한단계 상위(주소 제일 마지막 /보다 왼쪽으로 한칸 앞 /)
+					 --%>
+					
+					<c:choose>
+						<c:when test="${!empty param.sk && !empty param.sv}">
+							<c:url var="goToList" value="../search.do">
+								<c:param name="cp">${param.cp}</c:param>
+								<c:param name="sk">${param.sk}</c:param>
+								<c:param name="sv">${param.sv}</c:param>
+							</c:url>
+						</c:when>
+						
+						<c:otherwise>
+							<c:url var="goToList" value="list.do">
+								<c:param name="cp">${param.cp}</c:param>
+							</c:url>
+						</c:otherwise>
+					</c:choose>
 					
 					<a href="${goToList}" class="btn btn-primary float-right">목록으로</a>
 				</div>

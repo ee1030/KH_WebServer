@@ -2,6 +2,7 @@ package com.kh.wsp.search.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kh.wsp.board.model.vo.Board;
 import com.kh.wsp.board.model.vo.PageInfo;
 import com.kh.wsp.search.model.service.SearchService;
 
@@ -33,6 +35,22 @@ public class SearchController extends HttpServlet {
 			
 			// 페이징 처리를 위한 데이터를 계산하고 저장하는 객체 PageInfo 얻어오기
 			PageInfo pInfo = service.getPageInfo(map);
+			
+			// 검색 게시글 목록 조회
+			List<Board> bList = service.searchBoardList(map, pInfo);
+			
+			/*for(Board b : bList) {
+				System.out.println(b);
+			}*/
+			
+			// 조회된 내용과 PageInfo 객체를 request 객체에 담아서 요청 위임
+			String path = "/WEB-INF/views/board/boardList.jsp";
+			
+			request.setAttribute("bList", bList);
+			request.setAttribute("pInfo", pInfo);
+			
+			RequestDispatcher view = request.getRequestDispatcher(path);
+			view.forward(request, response);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

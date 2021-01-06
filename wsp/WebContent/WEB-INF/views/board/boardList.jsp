@@ -110,16 +110,37 @@
 
 
 			<%-- 로그인이 되어있는 경우 --%>
-			<button type="button" class="btn btn-primary float-right" id="insertBtn" onclick="location.href = 'insertForm.do'">글쓰기</button>
+			<c:if test="${!empty loginMember }">
+				<button type="button" class="btn btn-primary float-right" id="insertBtn"
+				 onclick="location.href = 'insertForm.do'">글쓰기</button>
+			</c:if>
+			
 			
 			
 			<%---------------------- Pagination ----------------------%>
 			<%-- 페이징 처리 주소를 쉽게 사용할 수 있도록 미리 변수에 저장 --%>
-			<c:url var="pageUrl" value="/board/list.do"/>
+			<c:choose>
+				<%-- 검색 내용이 파라미터에 존재할 때 == 검색을 통해 만들어진 페이지인가? --%>
+				<c:when test="${!empty param.sk && !empty param.sv }">
+					<c:url var="pageUrl" value="/search.do"/>
+					
+					<%-- 쿼리스트링으로 사용할 내용을 변수에 저장 --%>
+					<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>	
+				</c:when>
+				
+				<c:otherwise>
+					<c:url var="pageUrl" value="/board/list.do"/>
+				</c:otherwise>
+			</c:choose>
+			
 			
 			<!-- 화살표에 들어갈 주소를 변수로 생성 -->
-			<c:set var="firstPage" value="${pageUrl}?cp=1"/>
-			<c:set var="lastPage" value="${pageUrl}?cp=${pInfo.maxPage}"/>
+			<%--
+				검색을 안했을 때 : /board/list.do?cp=1
+				검색을 했을 때 : /search.do?cp=1&sk=title&sv=49
+			 --%>
+			<c:set var="firstPage" value="${pageUrl}?cp=1${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?cp=${pInfo.maxPage}${searchStr}"/>
 			
 			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형의 영향을 받지 않는다. --%>
 			<%-- 
@@ -141,11 +162,11 @@
 					<%-- 현재 페이지가 10페이지 초과인 경우 --%>
 					<c:if test="${pInfo.currentPage > 10}">
 						<li> <!-- 첫페이지로 이동(<<) -->
-							<a class="page-link" href="${firstPage}">&lt;&lt;</a>
+							<a class="page-link" href="${firstPage}${searchStr}">&lt;&lt;</a>
 						</li>
 						
 						<li> <!-- 이전 페이지로 이동(<) -->
-							<a class="page-link" href="${prevPage}">&lt;</a>
+							<a class="page-link" href="${prevPage}${searchStr}">&lt;</a>
 						</li>
 					</c:if>
 					
@@ -160,7 +181,7 @@
 							
 							<c:otherwise>
 								<li>
-									<a class="page-link" href="${pageUrl}?cp=${page}">${page}</a>
+									<a class="page-link" href="${pageUrl}?cp=${page}${searchStr}">${page}</a>
 								</li>
 							</c:otherwise>
 						</c:choose>
@@ -169,11 +190,11 @@
 					<%-- 다음 페이지가 마지막 페이지 미만인 경우 --%>
 					<c:if test="${next < pInfo.maxPage}">
 						<li> <!-- 다음 페이지로 이동(>) -->
-							<a class="page-link" href="${nextPage}">&gt;</a>
+							<a class="page-link" href="${nextPage}${searchStr}">&gt;</a>
 						</li>
 						
 						<li> <!-- 마지막페이지로 이동(>>) -->
-							<a class="page-link" href="${lastPage}">&gt;&gt;</a>
+							<a class="page-link" href="${lastPage}${searchStr}">&gt;&gt;</a>
 						</li>
 					</c:if>
 				</ul>
@@ -207,11 +228,31 @@
 			var boardNo = $(this).parent().children().eq(0).text();
 			//console.log(boardNo);
 			
-			var url = "${contextPath}/board/view.do?cp=${pInfo.currentPage}&no=" + boardNo;
+			var url = "${contextPath}/board/view.do?cp=${pInfo.currentPage}&no=" + boardNo + "${searchStr}";
 			
 			location.href = url;
 		});
 		
+		// 검색 내용이 있을 경우 해당 내용을 작성해두는 기능
+		(function () {
+			var searchKey = "${param.sk}";
+			// 파라미터 중 sk가 있을 경우 ex) "49"
+			// 파라미터 중 sk가 없을 경우 ex) ""
+			
+			var searchValue = "${param.sv}";
+			
+			$("select[name=sk] > option").each(function(index, item){
+				// index : 현재 접근중인 요소의 인덱스
+				// item : 현재 접근중인 요소
+				
+				if($(item).val() == searchKey) {
+					$(item).prop("selected", true);
+				}
+			});
+			
+			// 검색어 입력창에 searchValue 값 출력
+			$("input[name=sv]").val(searchValue);
+		});
 	</script>
 </body>
 </html>

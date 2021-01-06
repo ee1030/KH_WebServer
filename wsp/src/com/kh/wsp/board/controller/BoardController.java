@@ -87,6 +87,14 @@ public class BoardController extends HttpServlet {
 				}
 			}
 			
+			// 게시글 작성 화면 전환 Controller ******************************************
+			else if(command.equals("/insertForm.do")) {
+				path = "/WEB-INF/views/board/boardInsert.jsp";
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+				
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			path = "/WEB-INF/views/common/errorPage.jsp";

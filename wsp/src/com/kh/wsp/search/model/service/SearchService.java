@@ -3,8 +3,10 @@ package com.kh.wsp.search.model.service;
 import static com.kh.wsp.common.JDBCTemplate.*;
 
 import java.sql.Connection;
+import java.util.List;
 import java.util.Map;
 
+import com.kh.wsp.board.model.vo.Board;
 import com.kh.wsp.board.model.vo.PageInfo;
 import com.kh.wsp.search.model.dao.SearchDAO;
 
@@ -28,7 +30,14 @@ public class SearchService {
 		// 검색 조건에 따른 SQL 조건문을 조합하는 메소드 호출
 		String condition = createCondition(map);
 		
-		return null;
+		// DB에서 조건을 만족하는 게시글의 수를 조회하기
+		int listCount = dao.getListCount(conn, condition);
+		
+		// 커넥션 반환
+		close(conn);
+		
+		// PageInfo 객체를 생성하여 반환
+		return new PageInfo((int)map.get("currentPage"), listCount);
 	}
 
 	/** 검색 조건에 따라 SQL에 사용될 조건문을 조합하는 메소드
@@ -59,5 +68,21 @@ public class SearchService {
 		}
 		
 		return condition;
-	} 
+	}
+
+	/** 검색 게시글 목록 리스트 조회 Service
+	 * @param map
+	 * @param pInfo 
+	 * @return bList
+	 * @throws Exception
+	 */
+	public List<Board> searchBoardList(Map<String, Object> map, PageInfo pInfo) throws Exception {
+		Connection conn = getConnection();
+		
+		String condition = createCondition(map);
+		
+		List<Board> bList = dao.searchBoardList(conn, pInfo, condition);
+		
+		return bList;
+	}
 }
