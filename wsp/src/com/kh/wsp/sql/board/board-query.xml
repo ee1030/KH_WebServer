@@ -30,4 +30,22 @@ UPDATE BOARD SET
 READ_COUNT = READ_COUNT + 1
 WHERE BOARD_NO = ?
 </entry>
+
+<!-- 다음 게시글 번호 조회 -->
+<entry key="selectNextNo">
+SELECT SEQ_BNO.NEXTVAL FROM DUAL
+</entry>
+
+<!-- 게시글 삽입 -->
+<entry key="insertBoard">
+INSERT INTO BOARD(BOARD_NO, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER, CATEGORY_CD)
+VALUES(?, ?, ?, ?, ?)
+</entry>
+
+<!-- 파일 정보 삽입 -->
+<entry key="insertAttachment">
+INSERT INTO ATTACHMENT
+VALUES(SEQ_FNO.NEXTVAL, ?, ?, ?, ?)
+</entry>
+
 </properties>

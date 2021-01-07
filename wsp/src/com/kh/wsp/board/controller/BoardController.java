@@ -106,6 +106,8 @@ public class BoardController extends HttpServlet {
 			// 게시글 등록 Controller (+ 파일 업로드) ***************************************
 			else if(command.equals("/insert.do")) {
 				
+				errorMsg = "게시글 삽입 과정에서 오류 발생";
+				
 				// 제출(요청)되는 form 태그의 encType이 multipart/form-data 형식이면
 				// 기존에 사용하던 request 객체로 파라미터를 얻어올 수 없다.
 				// --> cos.jar에서 제공하는 MultipartRequest 객체를 사용하면
@@ -119,7 +121,7 @@ public class BoardController extends HttpServlet {
 				String root = request.getSession().getServletContext().getRealPath("/");
 				String filePath = root + "resources/uploadImages/";
 				
-				System.out.println("filePath : " + filePath);
+				//System.out.println("filePath : " + filePath);
 				
 				// 1-3. 파일명 변환을 위한 클래스 작성하기
 				// cos.jar에서 중복되는 파일이 업로드 되었을 때

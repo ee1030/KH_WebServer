@@ -9,8 +9,10 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import com.kh.wsp.board.model.vo.Attachment;
 import com.kh.wsp.board.model.vo.Board;
 import com.kh.wsp.board.model.vo.PageInfo;
 
@@ -155,6 +157,86 @@ public class BoardDAO {
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, boardNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 다음 게시글 번호 조회 DAO
+	 * @param conn
+	 * @return boardNo
+	 * @throws Exception
+	 */
+	public int selectNextNo(Connection conn) throws Exception {
+		int boardNo = 0;
+		
+		String query = prop.getProperty("selectNextNo");
+		
+		try {
+			stmt = conn.createStatement();
+			rset = stmt.executeQuery(query);
+			
+			if(rset.next()) {
+				boardNo = rset.getInt(1);
+			}
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return boardNo;
+	}
+
+	/** 게시글 삽입 DAO
+	 * @param conn
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertBoard(Connection conn, Map<String, Object> map) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("insertBoard");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, (int)map.get("boardNo"));
+			pstmt.setString(2, (String)map.get("boardTitle"));
+			pstmt.setString(3, (String)map.get("boardContent"));
+			pstmt.setInt(4, (int)map.get("boardWriter"));
+			pstmt.setInt(5, (int)map.get("categoryCode"));
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 파일 정보 삽입 DAO
+	 * @param conn
+	 * @param at
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertAttachment(Connection conn, Attachment at) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("insertAttachment");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, at.getFilePath());
+			pstmt.setString(2, at.getFileName());
+			pstmt.setInt(3, at.getFileLevel());
+			pstmt.setInt(4, at.getParentBoardNo());
 			
 			result = pstmt.executeUpdate();
 			
