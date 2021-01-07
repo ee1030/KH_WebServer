@@ -83,6 +83,14 @@ public class BoardController extends HttpServlet {
 				Board board = service.selectBoard(boardNo);
 				
 				if(board != null) { // 상세조회 성공시
+					
+					// 해당 게시글에 포함된 이미지 파일 목록 조회 서비스 호출
+					List<Attachment> fList = service.selectBoardFiles(boardNo);
+					
+					if(!fList.isEmpty()) { // 해당 게시글 이미지 정보가 DB에 있을 경우
+						request.setAttribute("fList", fList);
+					}
+					
 					path = "/WEB-INF/views/board/boardView.jsp";
 					request.setAttribute("board", board);
 					
@@ -204,6 +212,20 @@ public class BoardController extends HttpServlet {
 				// 4. 게시글 등록 비즈니스 로직 수행 후 결과 반환받기
 				int result = service.insertBoard(map);
 				
+				if(result > 0) { // DB 삽입 성공 시 result 에는 삽입한 글 번호가 저장되어 있다.
+					swalIcon = "success";
+					swalTitle = "게시글 등록 성공!";
+					path = "view.do?cp=1&no=" + result;
+				} else {
+					swalIcon = "error";
+					swalTitle = "게시글 등록 실패";
+					path = "list.do"; // 게시글 목록
+				}
+				
+				request.getSession().setAttribute("swalIcon", swalIcon);
+				request.getSession().setAttribute("swalTitle", swalTitle);
+				
+				response.sendRedirect(path);
 			}
 			
 		} catch (Exception e) {

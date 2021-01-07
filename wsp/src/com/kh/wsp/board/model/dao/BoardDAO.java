@@ -247,4 +247,39 @@ public class BoardDAO {
 		return result;
 	}
 
+	/** 게시글에 포함된 이미지 목록 조회 DAO
+	 * @param conn
+	 * @param boardNo
+	 * @return fList
+	 * @throws Exception
+	 */
+	public List<Attachment> selectBoardFiles(Connection conn, int boardNo) throws Exception {
+		List<Attachment> fList = null;
+		
+		String query = prop.getProperty("selectBoardFiles");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, boardNo);
+			
+			rset = pstmt.executeQuery();
+			
+			fList = new ArrayList<Attachment>();
+			
+			while(rset.next()) {
+				Attachment at = new Attachment(rset.getInt("FILE_NO"),
+											   rset.getString("FILE_NAME"),
+											   rset.getInt("FILE_LEVEL"));
+				
+				fList.add(at);
+			}
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return fList;
+	}
+
 }

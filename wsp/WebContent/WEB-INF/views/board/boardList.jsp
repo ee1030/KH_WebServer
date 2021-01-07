@@ -34,13 +34,19 @@
 }
 
 .list-wrapper{
-	height: 540px;
+	min-height: 540px;
 }
 
 #list-table td:hover {
 	cursor: pointer;
 }
 
+/* 세로 가운데 정렬*/
+#list-table td{
+  vertical-align: middle;
+  /* vertical-align : inline, inline-block 요소에만 적용 가능(td는 inline-block)*/
+	
+}
 
 </style>
 

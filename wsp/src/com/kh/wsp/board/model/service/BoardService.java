@@ -206,4 +206,19 @@ public class BoardService {
 		
 		return result;
 	}
+
+	/** 게시글에 포함된 이미지 목록 조회 Service
+	 * @param boardNo
+	 * @return fList
+	 * @throws Exception
+	 */
+	public List<Attachment> selectBoardFiles(int boardNo) throws Exception {
+		Connection conn = getConnection();
+		
+		List<Attachment> fList = dao.selectBoardFiles(conn, boardNo);
+		
+		close(conn);
+		
+		return fList;
+	}
 }
