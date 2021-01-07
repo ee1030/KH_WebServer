@@ -4,6 +4,7 @@ import static com.kh.wsp.common.JDBCTemplate.*;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import com.kh.wsp.board.model.dao.BoardDAO;
 import com.kh.wsp.board.model.vo.Board;
@@ -78,5 +79,23 @@ public class BoardService {
 		close(conn);
 		
 		return board;
+	}
+
+	/** 게시글 등록 Service (게시글 + 파일)
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertBoard(Map<String, Object> map) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		// 1. 게시글 번호 얻어오기
+		
+		// 2. 글 제목/내용 크로스 사이트 스크립팅 방지 처리
+		
+		// 3. 글 내용 개행문자 \r\n -> <br> 변경처리
+		
+		return 0;
 	}
 }

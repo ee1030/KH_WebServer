@@ -1,7 +1,11 @@
 package com.kh.wsp.board.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,8 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kh.wsp.board.model.service.BoardService;
+import com.kh.wsp.board.model.vo.Attachment;
 import com.kh.wsp.board.model.vo.Board;
 import com.kh.wsp.board.model.vo.PageInfo;
+import com.kh.wsp.common.MyFileRenamePolicy;
+import com.kh.wsp.member.model.vo.Member;
+import com.oreilly.servlet.MultipartRequest;
 
 @WebServlet("/board/*")
 public class BoardController extends HttpServlet {
@@ -92,6 +100,107 @@ public class BoardController extends HttpServlet {
 				path = "/WEB-INF/views/board/boardInsert.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
+				
+			}
+			
+			// 게시글 등록 Controller (+ 파일 업로드) ***************************************
+			else if(command.equals("/insert.do")) {
+				
+				// 제출(요청)되는 form 태그의 encType이 multipart/form-data 형식이면
+				// 기존에 사용하던 request 객체로 파라미터를 얻어올 수 없다.
+				// --> cos.jar에서 제공하는 MultipartRequest 객체를 사용하면
+				//	   파라미터를 얻어올 수 있다.
+				
+				// 1. MultipartRequest 객체 생성하기
+				// 1-1. 전송 파일 용량 지정(byte단위)
+				int maxSize = 20 * 1024 * 1024; // 20MB
+				
+				// 1-2. 서버에 업로드된 파일을 저장할 경로 지정
+				String root = request.getSession().getServletContext().getRealPath("/");
+				String filePath = root + "resources/uploadImages/";
+				
+				System.out.println("filePath : " + filePath);
+				
+				// 1-3. 파일명 변환을 위한 클래스 작성하기
+				// cos.jar에서 중복되는 파일이 업로드 되었을 때
+				// 파일명을 바꿔주는 defaultFileRenamePolicy 클래스를 제공해 주지만
+				// ex) a.jpg, a(1).jpg, a(2).jpg
+				// 파일명에 업로드된 시간을 표기할 수 있도록 변경하는 별도의 클래스를 작성할 예정.
+				
+				// 1-4. MultipartRequest 객체 생성
+				// -> 객체 생성과 동시에 파라미터로 넘어온 내용 중 파일이 서버에 바로 저장됨.
+				MultipartRequest multiRequest 
+					= new MultipartRequest(request, filePath, maxSize, "UTF-8", new MyFileRenamePolicy());
+				
+				// 2. 생성한 MultipartRequest 객체에서 파일 정보만을 얻어와
+				// 별도의 List에 모두 저장하기
+				
+				// 2-1. 파일 정보를 모두 저장할 List 객체 생성
+				List<Attachment> fList = new ArrayList<>();
+				
+				// 2-2. MultipartRequest에서 업로드된 파일의 name 속성값 모두 반환 받기
+				Enumeration<String> files = multiRequest.getFileNames();
+				// Iterator : 컬렉션 요소 반복 접근자
+				// Enumeration : Iterator의 과거 버전
+				
+				// 2-3. 얻어온 Enumeration 객체에 요소를 하나씩 반복 접근하여
+				//		업로드된 파일 정보를 Attachment 객체에 저장한 후
+				//		fList에 추가하기
+				while(files.hasMoreElements()) { // 다음 요소가 있다면
+					
+					// 현재 접근한 요소값 반환
+					String name = files.nextElement(); // img0
+					//System.out.println("name : " + name);
+					//System.out.println("원본 파일명 : " + multiRequest.getOriginalFileName(name));
+					//System.out.println("변경된 파일명 : " + multiRequest.getFilesystemName(name));
+					
+					// 제출받은 file태그 요소 중 업로드된 파일이 있을 경우
+					if(multiRequest.getFilesystemName(name) != null) {
+						
+						// Attachment 객체게 파일 정보 저장
+						Attachment temp = new Attachment();
+						
+						temp.setFileName(multiRequest.getFilesystemName(name));
+						temp.setFilePath(filePath);
+						
+						// name 속성에 따라 fileLevel 지정
+						int fileLevel = 0;
+						
+						switch(name) {
+						case "img0" : fileLevel = 0; break;
+						case "img1" : fileLevel = 1; break;
+						case "img2" : fileLevel = 2; break;
+						case "img3" : fileLevel = 3; break;
+						}
+						
+						temp.setFileLevel(fileLevel);
+						
+						// fList에 추가
+						fList.add(temp);
+					}
+				} // end while
+				
+				// 3. 파일 정보를 제외한 게시글 정보를 얻어 저장하기
+				String boardTitle = multiRequest.getParameter("boardTitle");
+				String boardContent = multiRequest.getParameter("boardContent");
+				int categoryCode = Integer.parseInt(multiRequest.getParameter("categoryCode"));
+				
+				// 세션에서 로그인한 회원의 번호를 얻어오기
+				Member loginMember = (Member)request.getSession().getAttribute("loginMember");
+				int boardWriter = loginMember.getMemberNo();
+				
+				// fList, boardTitle, boardContent, categoryCode, boardWriter
+				
+				// Map 객체를 생성하여 얻어온 정보들을 모두 저장
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("fList", fList);
+				map.put("boardTitle", boardTitle);
+				map.put("boardContent", boardContent);
+				map.put("categoryCode", categoryCode);
+				map.put("boardWriter", boardWriter);
+				
+				// 4. 게시글 등록 비즈니스 로직 수행 후 결과 반환받기
+				int result = service.insertBoard(map);
 				
 			}
 			
