@@ -96,6 +96,8 @@ public class BoardService {
 		
 		// 3. 글 내용 개행문자 \r\n -> <br> 변경처리
 		
+		// 4. 게시글 부분(제목, 내용, 카테고리)만 BOARD 테이블에 삽이하는 DAO 호출
+		
 		return 0;
 	}
 }
