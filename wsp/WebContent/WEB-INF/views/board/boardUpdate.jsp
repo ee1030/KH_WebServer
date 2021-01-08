@@ -30,7 +30,7 @@
 			<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
 		</c:if>
 		
-		<form action="<%=request.getContextPath()%>/board/update.do?cp=${param.cp}&no=${param.no}${searchStr}" method="post" 
+		<form action="update.do?cp=${param.cp}&no=${param.no}${searchStr}" method="post" 
 			  enctype="multipart/form-data" role="form" onsubmit="return updateValidate();">
 
 			<div class="mb-2">
@@ -164,13 +164,24 @@
       }
     }
     
-    
-	
 		// 카테고리 초기값 지정
-	
+		(function(){
+			$("#categoryCode > option").each(function(index, item) {
+				
+				if($(item).text() == "${board.categoryName}"){
+					$(item).prop("selected", true);
+				}
+				
+			});
+			
+		})();
 
 	
 		// 이미지 배치
+		<c:forEach var="file" items="${fList}">
+			$(".boardImg").eq(${file.fileLevel}).children("img")
+				.attr("src", "${contextPath}/resources/uploadImages/${file.fileName}");
+		</c:forEach>
 	
 	</script>
 	

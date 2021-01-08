@@ -236,4 +236,23 @@ public class BoardService {
 		
 		return fList;
 	}
+
+	/** 게시글 수정 화면 출력용 Service
+	 * @param boardNo
+	 * @return board
+	 * @throws Exception
+	 */
+	public Board updateView(int boardNo) throws Exception {
+		Connection conn = getConnection();
+		
+		// 이전에 만들어둔 상세조회 DAO 호출
+		Board board = dao.selectBoard(conn, boardNo);
+		
+		// textarea 출력을 위한 개행문자 변환 작업
+		board.setBoardContent(board.getBoardContent().replaceAll("<br>", "\r\n"));
+		
+		close(conn);
+		
+		return board;
+	}
 }

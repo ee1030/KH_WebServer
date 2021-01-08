@@ -118,6 +118,7 @@
 
 				<hr>
 				<!-- 이미지 출력 -->
+				<c:if test="${!empty fList}">
 				<div class="carousel slide boardImgArea" id="board-image">
 				
 					<!-- 이미지 선택 버튼 -->
@@ -149,6 +150,7 @@
 						data-slide="next"><span class="carousel-control-next-icon"></span>
 						<span class="sr-only">Next</span></a>
 				</div>
+				</c:if>
 
 				<!-- Content -->
 				<div id="board-content">${board.boardContent}</div>
@@ -163,7 +165,14 @@
 					<c:if
 						test="${!empty loginMember && (board.memberId == loginMember.memberId)}">
 						<button id="deleteBtn" class="btn btn-primary float-right">삭제</button>
-						<a href="#" class="btn btn-primary float-right ml-1 mr-1">수정</a>
+						
+						<%-- 게시글 수정 후 상세조회 페이지로 돌아오기 위한 url 조합 --%>
+						<c:if test="${!empty param.sv && !empty param.sk }">
+							<%-- 검색을 통해 들어온 상세 조회 페이지인 경우 --%>
+							<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.kv}"/>
+						</c:if>
+						
+						<a href="updateForm.do?cp=${param.cp}&no=${param.no}${searchStr}" class="btn btn-primary float-right ml-1 mr-1">수정</a>
 					</c:if>
 
 					<%--

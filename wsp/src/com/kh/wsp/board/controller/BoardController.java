@@ -239,6 +239,38 @@ public class BoardController extends HttpServlet {
 				response.sendRedirect(path);
 			}
 			
+			// 게시글 수정 화면 전환 Controller ************************************
+			else if(command.equals("/updateForm.do")) {
+				
+				errorMsg = "게시글 수정 화면 전환 과정에서 오류 발생";
+				
+				// 수정 화면이 미리 이전 내용을 작성할 수 있게
+				// 글 번호를 이용하여 이전 내용을 조회해옴
+				
+				int boardNo = Integer.parseInt(request.getParameter("no"));
+				
+				Board board = service.updateView(boardNo);
+				
+				// 업데이트 화면 출력용 게시글 조회가 성공한 경우
+				if(board != null) {
+					// 해당 게시글에 작성된 이미지(파일) 목록 정보 조회
+					List<Attachment> fList = service.selectBoardFiles(boardNo);
+					
+					if(!fList.isEmpty()) {
+						request.setAttribute("fList", fList);
+					}
+					
+					request.setAttribute("board", board);
+					path = "/WEB-INF/views/board/boardUpdate.jsp";
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+				} else {
+					request.getSession().setAttribute("swalIcon", "error");
+					request.getSession().setAttribute("swalTitle", "게시글 수정 화면 전환 실패");
+					response.sendRedirect(request.getHeader("referer"));
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			path = "/WEB-INF/views/common/errorPage.jsp";
