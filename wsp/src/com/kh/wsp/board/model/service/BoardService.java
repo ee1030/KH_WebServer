@@ -4,6 +4,7 @@ import static com.kh.wsp.common.JDBCTemplate.*;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -254,5 +255,147 @@ public class BoardService {
 		close(conn);
 		
 		return board;
+	}
+
+	/** 게시글 수정 Service
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBoard(Map<String, Object> map) throws Exception {
+		Connection conn = getConnection();
+		
+		int result = 0; // service 수행 결과 저장 변수
+		List<Attachment> deleteFiles = null; // 삭제할 파일 정보 저장 변수 선언
+		
+		// 1. 글 제목/내용 크로스 사이트 스크립팅 방지 처리
+		String boardTitle = (String)map.get("boardTitle");
+		String boardContent = (String)map.get("boardContent");
+		
+		boardTitle = replaceParameter(boardTitle);
+		boardContent = replaceParameter(boardContent);
+		
+		// 2. 글 내용 개행문자 \r\n -> <br> 변경처리
+		boardContent = boardContent.replaceAll("\r\n", "<br>");
+		
+		// 처리된 내용을 다시 map에 추가
+		map.put("boardTitle", boardTitle);
+		map.put("boardContent", boardContent);
+		
+		try {
+			// 3. 게시글 부분 수정 DAO 호출
+			result = dao.updateBoard(conn, map);
+			
+			// 4. 게시글 수정 성공하고 fList가 비어있지 않으면
+			//	  파일 정보 수정 DAO 호출
+			
+			// 수정 화면에서 새로운 이미지가 업로드된 파일 정보만을 담고 있는 List
+			List<Attachment> newFileList = (List<Attachment>)map.get("fList");
+		
+			if(result > 0 && !newFileList.isEmpty()) {
+				
+				// DB에서 해당 게시글의 수정 전 목록을 조회함.
+				List<Attachment> oldFileList = dao.selectBoardFiles(conn, (int)map.get("boardNo"));
+				
+				// newFileList -> 수정된 썸네일(lv.0)
+				// oldFileList -> 썸네일(lv.0), 이미지1(lv.1), 이미지2(lv.2)
+				
+				// 기존 썸네일(lv.0) -> 수정된 썸네일(lv.0)로 변경됨
+				// --> DB에서 기존 썸네일의 데이터를 수정된 섬네일로 변경
+				// 	--> DB에서 기존 썸네일 정보가 사라짐.
+				
+				result = 0; // result 재활용
+				deleteFiles = new ArrayList<Attachment>(); // 삭제될 파일 정보 저장 List
+				
+				// 새로운 이미지 정보 반복 접근
+				for(Attachment newFile : newFileList) {
+					
+					// flag가 false인 경우 : 새 이미지와 기존 이미지의 파일 레벨이 중복되는 경우 -> update
+					// flag가 true인 경우 : 새 이미지와 기존 이미지의 파일 레벨이 중복되지 않는 경우 -> insert
+					boolean flag = true;
+					
+					// 기존 이미지 정보 반복 접근
+					for(Attachment oldFile : oldFileList) {
+						
+						// 새로운 이미지와 기존 이미지의 파일 레벨이 동일한 파일이 있다면
+						if(newFile.getFileLevel() == oldFile.getFileLevel()) {
+							
+							// 기존 파일을 삭제 List에 추가
+							deleteFiles.add(oldFile);
+							
+							// 새 이미지 정보에 이전 파일 번호를 추가 -> 파일 번호를 이용한 수정 진행
+							newFile.setFileNo(oldFile.getFileNo());
+							
+							flag = false;
+							
+							break;
+						}
+					}
+					
+					// flag 값에 따라 파일 정보 insert 또는 update 수행
+					if(flag) {
+						result = dao.insertAttachment(conn, newFile);
+					} else {
+						result = dao.updateAttachment(conn, newFile);
+					}
+					
+					// 파일 정보 삽입 또는 수정 중 실패 시
+					if(result == 0) {
+						// 강제로 사용자 정의 예외 발생
+						throw new FileInsertFailedException();
+					}
+				}
+			}
+			
+			
+		} catch (Exception e) {
+			// 게시글 수정 중 실패 또는 오류 발생 시
+			// 서버에 미리 저장되어있던 이미지 파일 삭제
+			List<Attachment> fList = (List<Attachment>)map.get("fList");
+			
+			if(!fList.isEmpty()) {
+				for(Attachment at : fList) {
+					String filePath = at.getFilePath();
+					String fileName = at.getFileName();
+					
+					File deleteFile = new File(filePath + fileName);
+					
+					if(deleteFile.exists()) {
+						// 해당 경로에 해당 파일이 존재하면
+						deleteFile.delete(); // 해당 파일 삭제
+					}
+				}	
+			}
+			
+			// 에러페이지가 보여질 수 있도록 catch한 exception을 Controller로 던져줌
+			throw e;
+		}
+		
+		// 5. 트랜잭션 처리 및 삭제 목록에 있는 파일 삭제
+		if(result > 0) {
+			commit(conn);
+			
+			if(deleteFiles != null) {
+			
+				// DB 정보와 맞지 않는 파일(deleteFiles) 삭제 진행
+				for(Attachment at : deleteFiles) {
+					String filePath = at.getFilePath();
+					String fileName = at.getFileName();
+					
+					File deleteFile = new File(filePath + fileName);
+					
+					if(deleteFile.exists()) {
+						deleteFile.delete();
+					}
+				}
+			}
+			
+		} else {
+			rollback(conn);
+		}
+		
+		close(conn);
+		
+		return result;
 	}
 }

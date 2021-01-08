@@ -271,6 +271,103 @@ public class BoardController extends HttpServlet {
 				}
 			}
 			
+			// 게시글 수정 Controller **********************************************
+			else if(command.equals("/update.do")) {
+				errorMsg = "게시글 수정 과정에서 오류 발생";
+				
+				// 1. MultipartRequest 객체 생성에 필요한 값 설정
+				int maxSize = 20 * 1024 * 1024; // 최대 크기 20MB
+				String root = request.getSession().getServletContext().getRealPath("/");
+				String filePath = root + "resources/uploadImages/";
+				
+				// 2. MultipartRequest 객체 생성
+				MultipartRequest mRequest
+					= new MultipartRequest(request, filePath, maxSize, "UTF-8", new MyFileRenamePolicy());
+				
+				// 3. 파일 정보를 제외한 파라미터 얻어오기
+				String boardTitle = mRequest.getParameter("boardTitle");
+				String boardContent = mRequest.getParameter("boardContent");
+				int categoryCode = Integer.parseInt(mRequest.getParameter("categoryCode"));
+				int boardNo = Integer.parseInt(mRequest.getParameter("no"));
+				
+				// 4. 전달받은 파일 정보를 List에 저장
+				List<Attachment> fList = new ArrayList<Attachment>();
+				
+				Enumeration<String> files = mRequest.getFileNames();
+				// input type="file"인 모든 요소의 name속성 값을 반환받아 files에 저장
+				
+				while(files.hasMoreElements()) {
+					
+					// 현재 접근중인 name 속성값을 변수에 저장
+					String name = files.nextElement();
+					
+					// 현재 name 속성이 일치하는 요소로 업로드된 파일이 있다면
+					if(mRequest.getFilesystemName(name) != null) {
+						
+						Attachment temp = new Attachment();
+						
+						// 변경된 파일 이름 temp에 저장
+						temp.setFileName(mRequest.getFilesystemName(name));
+						
+						// 지정한 파일 경로 temp에 저장
+						temp.setFilePath(filePath);
+						
+						// 해당 게시글 번호 temp에 저장
+						temp.setParentBoardNo(boardNo);
+						
+						// 파일 레벨 temp에 저장
+						switch(name) {
+						case "img0" : temp.setFileLevel(0); break;
+						case "img1" : temp.setFileLevel(1); break;
+						case "img2" : temp.setFileLevel(2); break;
+						case "img3" : temp.setFileLevel(3); break;
+						}
+						
+						// temp를 fList에 추가
+						fList.add(temp);
+					}
+				}
+				
+				// 5. Session에서 로그인한 회원의 번호를 얻어와 저장
+				int boardWriter 
+					= ((Member)request.getSession().getAttribute("loginMember")).getMemberNo();
+				
+				// 6. 준비된 값들을 하나의 Map에 저장
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("boardTitle", boardTitle);
+				map.put("boardContent", boardContent);
+				map.put("categoryCode", categoryCode);
+				map.put("boardNo", boardNo);
+				map.put("fList", fList);
+				map.put("boardWriter", boardWriter);
+				
+				// 7. 준비된 값을 매개변수로 하여 게시글 수정 Service 호출
+				int result = service.updateBoard(map);
+				
+				// 8. result 값에 따라 View 연결 처리
+				path = "view.do?cp=" + cp + "&no=" + boardNo;
+				String sk = mRequest.getParameter("sk");
+				String sv = mRequest.getParameter("sv");
+				
+				if(sk != null && sv != null) {
+					path += "&sk=" + sk + "&sv=" + sv;
+				}
+				
+				if(result > 0) {
+					swalIcon = "success";
+					swalTitle = "게시글 수정 성공";
+				} else { 
+					swalIcon = "error";
+					swalTitle = "게시글 수정 실패";
+				}
+				
+				request.getSession().setAttribute("swalIcon", swalIcon);
+				request.getSession().setAttribute("swalTitle", swalTitle);
+				
+				response.sendRedirect(path);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			path = "/WEB-INF/views/common/errorPage.jsp";

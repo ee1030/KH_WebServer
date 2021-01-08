@@ -271,6 +271,7 @@ public class BoardDAO {
 											   rset.getString("FILE_NAME"),
 											   rset.getInt("FILE_LEVEL"));
 				
+				at.setFilePath(rset.getString("FILE_PATH"));
 				fList.add(at);
 			}
 			
@@ -320,6 +321,59 @@ public class BoardDAO {
 		}
 		
 		return fList;
+	}
+
+	/** 게시글 수정 DAO
+	 * @param conn
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBoard(Connection conn, Map<String, Object> map) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateBoard");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, (String)map.get("boardTitle"));
+			pstmt.setString(2, (String)map.get("boardContent"));
+			pstmt.setInt(3, (int)map.get("categoryCode"));
+			pstmt.setInt(4, (int)map.get("boardNo"));
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 파일 정보 수정 DAO
+	 * @param conn
+	 * @param newFile
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateAttachment(Connection conn, Attachment newFile) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateAttachment");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, newFile.getFilePath());
+			pstmt.setString(2, newFile.getFileName());
+			pstmt.setInt(3, newFile.getFileNo());
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
 	}
 
 }
