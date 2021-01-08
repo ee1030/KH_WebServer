@@ -132,7 +132,7 @@
 		function boardValidate() {
 			if ($("#boardTitle").val().trim().length == 0) {
 				alert("제목을 입력해 주세요.");
-				$("#title").focus();
+				$("#boardTitle").focus();
 				return false;
 			}
 

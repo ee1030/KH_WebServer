@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.wsp.board.model.vo.Attachment;
 import com.kh.wsp.board.model.vo.Board;
 import com.kh.wsp.board.model.vo.PageInfo;
 import com.kh.wsp.search.model.dao.SearchDAO;
@@ -84,5 +85,24 @@ public class SearchService {
 		List<Board> bList = dao.searchBoardList(conn, pInfo, condition);
 		
 		return bList;
+	}
+
+	/** 검색이 적용된 썹네일 목록 조회 Service
+	 * @param map
+	 * @param pInfo
+	 * @return fList
+	 * @throws Exception
+	 */
+	public List<Attachment> searchThumbnailList(Map<String, Object> map, PageInfo pInfo) throws Exception {
+		Connection conn = getConnection();
+		
+		// 검색에 사용될 SQL 조건문 생성
+		String condition = createCondition(map);
+		
+		List<Attachment> fList = dao.searchThumbnailList(conn, pInfo, condition);
+		
+		close(conn);
+		
+		return fList;
 	}
 }

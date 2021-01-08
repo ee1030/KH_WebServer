@@ -85,6 +85,18 @@
 										<td>${board.boardNo}</td>
 										<td>${board.categoryName}</td>
 										<td class="boardTitle">
+											
+											<%-- 썸네일 출력 --%>
+											<c:forEach var="thumbnail" items="${fList}">
+											
+												<%-- 현재 출력하려는 게시글 번호와
+														 썸네일 목록 중 부모게시글 번호가 일치하는 썸네일 정보가 있다면
+												 --%>
+												<c:if test="${board.boardNo == thumbnail.parentBoardNo }">
+													<img src="${contextPath}/resources/uploadImages/${thumbnail.fileName}">
+												</c:if>
+											</c:forEach>
+											
 											${board.boardTitle}
 										</td>
 										<td>${board.memberId}</td>
@@ -192,7 +204,7 @@
 					</c:forEach>
 					
 					<%-- 다음 페이지가 마지막 페이지 미만인 경우 --%>
-					<c:if test="${next < pInfo.maxPage}">
+					<c:if test="${next <= pInfo.maxPage}">
 						<li> <!-- 다음 페이지로 이동(>) -->
 							<a class="page-link" href="${nextPage}${searchStr}">&gt;</a>
 						</li>

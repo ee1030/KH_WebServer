@@ -221,4 +221,19 @@ public class BoardService {
 		
 		return fList;
 	}
+
+	/** 썸네일 목록 조회 Service
+	 * @param pInfo
+	 * @return fList
+	 * @throws Exception
+	 */
+	public List<Attachment> selectThumbnailList(PageInfo pInfo) throws Exception {
+		Connection conn = getConnection();
+		
+		List<Attachment> fList = dao.selectThumbnailList(conn, pInfo);
+		
+		close(conn);
+		
+		return fList;
+	}
 }

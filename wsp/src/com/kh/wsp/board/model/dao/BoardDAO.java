@@ -282,4 +282,44 @@ public class BoardDAO {
 		return fList;
 	}
 
+	/** 썸네일 이미지 목록 조회 DAO
+	 * @param conn
+	 * @param pInfo
+	 * @return fList
+	 * @throws Exception
+	 */
+	public List<Attachment> selectThumbnailList(Connection conn, PageInfo pInfo) throws Exception {
+		List<Attachment> fList = null;
+
+		String query = prop.getProperty("selectThumbnailList");
+		
+		try {
+			
+			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() - 1;
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			fList = new ArrayList<Attachment>();
+			
+			while(rset.next()) {
+				Attachment at = new Attachment();
+				at.setFileName(rset.getString("FILE_NAME"));
+				at.setParentBoardNo(rset.getInt("PARENT_BOARD_NO"));
+				
+				fList.add(at);
+			}
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return fList;
+	}
+
 }

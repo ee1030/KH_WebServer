@@ -64,6 +64,18 @@ public class BoardController extends HttpServlet {
 					System.out.println(b);
 				}*/
 				
+				// 3. 게시글 목록이 조회 되었을 때
+				//	  해당 게시글 목록 요소에 작성된 썸네일 이미지 목록 얻어오는 서비스 진행
+				if(bList != null) {
+					// 썸네일 이미지 목록 조회 서비스 호출
+					List<Attachment> fList = service.selectThumbnailList(pInfo);
+					
+					// 썸네일 이미지 목록이 비어있지 않은 경우
+					if(!fList.isEmpty()) {
+						request.setAttribute("fList", fList);
+					}
+				}
+				
 				path = "/WEB-INF/views/board/boardList.jsp";
 				
 				request.setAttribute("bList", bList);
