@@ -121,8 +121,6 @@
 				 onclick="location.href = 'insertForm.do'">글쓰기</button>
 			</c:if>
 			
-			
-			
 			<%---------------------- Pagination ----------------------%>
 			<%-- 페이징 처리 주소를 쉽게 사용할 수 있도록 미리 변수에 저장 --%>
 			<c:choose>

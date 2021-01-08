@@ -123,8 +123,9 @@
 					<!-- 이미지 선택 버튼 -->
 					<ol class="carousel-indicators">
 						<c:forEach var="file" items="${fList}" varStatus="vs">
-							<li data-slide-to="${vs.index}" data-target="board-image" 
-								<c:if test="${vs.first}">class="active"</c:if>></li>
+							<li data-slide-to="${vs.index}" data-target="#board-image" 
+								<c:if test="${vs.first}"> class="active"</c:if>>
+							</li>
 						</c:forEach>
 					</ol>
 

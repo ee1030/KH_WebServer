@@ -108,7 +108,6 @@ public class BoardController extends HttpServlet {
 				path = "/WEB-INF/views/board/boardInsert.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
-				
 			}
 			
 			// 게시글 등록 Controller (+ 파일 업로드) ***************************************
