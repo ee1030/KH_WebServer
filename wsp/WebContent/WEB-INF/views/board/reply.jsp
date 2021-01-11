@@ -123,6 +123,19 @@ $(function(){
 // 해당 게시글 댓글 목록 조회 함수(ajax)
 function selectReplyList(){
  
+	$.ajax({
+		url : "${contextPath}/reply/selectList.do",
+		data : {"parentBoardNo" : parentBoardNo },
+		type : "post",
+		dataType : "JSON",
+		success : function(rList) {
+			console.log(rList);
+		},
+		error : function() {
+			console.log("댓글 목록 조회 실패");
+		}
+		
+	});
 }
 
 //-----------------------------------------------------------------------------------------
