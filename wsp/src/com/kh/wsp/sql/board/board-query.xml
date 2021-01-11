@@ -87,4 +87,11 @@ FILE_NAME = ?
 WHERE FILE_NO =?
 </entry>
 
+<!-- 게시글 삭제 -->
+<entry key="updateBoardStatus">
+UPDATE BOARD SET
+BOARD_STATUS = 'N'
+WHERE BOARD_NO = ?
+</entry>
+
 </properties>

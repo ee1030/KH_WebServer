@@ -199,6 +199,7 @@
 
 					<a href="${goToList}" class="btn btn-primary float-right">목록으로</a>
 				</div>
+				<jsp:include page="reply.jsp"></jsp:include>
 			</div>
 
 
@@ -209,6 +210,12 @@
 
 
 	<script>
+		// 삭제버튼 이벤트
+		$("#deleteBtn").on("click", function(){
+			if(confirm("정말 삭제하시겠습니까?")) {
+				location.href = "delete.do?no=${board.boardNo}";
+			}
+		});
 		
 	</script>
 </body>

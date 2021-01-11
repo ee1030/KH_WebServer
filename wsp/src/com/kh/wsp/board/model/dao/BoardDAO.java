@@ -376,4 +376,28 @@ public class BoardDAO {
 		return result;
 	}
 
+	/** 게시글 삭제 DAO
+	 * @param conn
+	 * @param boardNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBoardStatus(Connection conn, int boardNo) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateBoardStatus");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, boardNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
 }

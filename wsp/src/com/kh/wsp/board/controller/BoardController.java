@@ -368,6 +368,34 @@ public class BoardController extends HttpServlet {
 				response.sendRedirect(path);
 			}
 			
+			// 게시글 삭제 Contorller ************************************************
+			else if(command.equals("/delete.do")) {
+				// 게시글 번호 얻어오기
+				int boardNo = Integer.parseInt(request.getParameter("no"));
+				
+				// 게시글 삭제(게시글 상태 -> 'N') 비즈니스 로직 수행 후 결과 반환
+				int result = service.updateBoardStatus(boardNo);
+				
+				// 비즈니스 로직 결과에 따라
+				// "게시글 삭제 성공" / "게시글 삭제 실패" 메세지를 전달
+				// 삭제 성공 시 : 게시글 목록 redirect
+				// 삭제 실패 시 : 삭제 시도한 게시글 상세조회 페이지 redirect
+				if(result > 0) {
+					swalIcon = "success";
+					swalTitle = "게시글 삭제 성공";
+					path = "list.do";
+				} else {
+					swalIcon = "error";
+					swalTitle = "게시글 삭제 실패";
+					path = request.getHeader("referer");
+				}
+				
+				request.getSession().setAttribute("swalIcon", swalIcon);
+				request.getSession().setAttribute("swalTitle", swalTitle);
+				
+				response.sendRedirect(path);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			path = "/WEB-INF/views/common/errorPage.jsp";
