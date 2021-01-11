@@ -9,4 +9,11 @@ FROM V_REPLY
 WHERE REPLY_STATUS = 'Y'
 AND PARENT_BOARD_NO = ?
 </entry>
+
+<!-- 댓글 삽입 -->
+<entry key="insertReply">
+INSERT INTO REPLY
+VALUES(SEQ_RNO.NEXTVAL, ?, DEFAULT, DEFAULT, ?, ?)
+</entry>
+
 </properties>

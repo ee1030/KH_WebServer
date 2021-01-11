@@ -36,6 +36,23 @@ public class ReplyController extends HttpServlet {
 				gson.toJson(rList, response.getWriter());
 			}
 			
+			else if(command.equals("/insertReply.do")) {
+				
+				// 오라클에서 숫자로 이루어진 문자열은 자동으로 숫자로 변환되는 특징을 사용할 예정
+				String replyWriter = request.getParameter("replyWriter");
+				int parentBoardNo = Integer.parseInt(request.getParameter("parentBoardNo"));
+				String replyContent = request.getParameter("replyContent");
+
+				Reply reply = new Reply();
+				reply.setMemberId(replyWriter); // 회원번호 저장됨
+				reply.setReplyContent(replyContent);
+				reply.setParentBoardNo(parentBoardNo);
+
+				int result = service.insertReply(reply);
+				
+				response.getWriter().print(result);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

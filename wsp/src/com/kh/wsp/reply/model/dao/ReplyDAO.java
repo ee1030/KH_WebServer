@@ -66,4 +66,30 @@ public class ReplyDAO {
 		return rList;
 	}
 
+	/** 댓글 삽입 DAO
+	 * @param conn
+	 * @param reply
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertReply(Connection conn, Reply reply) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("insertReply");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, reply.getReplyContent());
+			pstmt.setString(2, reply.getMemberId());
+			pstmt.setInt(3,  reply.getParentBoardNo());
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
 }

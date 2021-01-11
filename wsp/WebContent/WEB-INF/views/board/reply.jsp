@@ -194,14 +194,22 @@ $("#addReply").on("click", function(){
 			var replyWriter = "${loginMember.memberNo}";
 			
 			$.ajax({
-				url : "${contenxtPath}/reply/insertReply.do",
+				url : "${contextPath}/reply/insertReply.do",
 				data : {"replyWriter" : replyWriter,
 								"replyContent" : replyContent,
 								"parentBoardNo" : parentBoardNo},
 				type : "post",
 				success : function(result) {
-					if(result > 0) {
+					if(result > 0) { // 댓글 삽입 성공 시
 						
+						// 댓글 작성 내용 삭제
+						$("#replyContent").val("");
+					
+						// 성공 메시지 출력
+						swal({"icon" : "success", "title" : "댓글 등록 성공"});
+						
+						// 댓글 목록을 다시 조회 -> 새로 삽입한 댓글도 조회하여 화면에 출력
+						selectReplyList();
 					}
 					
 				},
@@ -225,7 +233,53 @@ var beforeReplyRow;
 
 // 댓글 수정 폼 출력 함수
 function showUpdateReply(replyNo, el){
+	//console.log($(".replyUpdateContent").length);
 	
+	// 이미 열려있는 댓글 수정 창이 있을 경우 닫아주기
+	if($(".replyUpdateContent").length > 0){
+		$(".replyUpdateContent").eq(0).parent().html(beforeReplyRow);
+	}
+		
+	
+	// 댓글 수정화면 출력 전 요소를 저장해둠.
+	beforeReplyRow = $(el).parent().parent().html();
+	//console.log(beforeReplyRow);
+	
+	
+	// 작성되어있던 내용(수정 전 댓글 내용) 
+	var beforeContent = $(el).parent().prev().html();
+	
+	
+	// 이전 댓글 내용의 크로스사이트 스크립트 처리 해제, 개행문자 변경
+	// -> 자바스크립트에는 replaceAll() 메소드가 없으므로 정규 표현식을 이용하여 변경
+	beforeContent = beforeContent.replace(/&amp;/g, "&");	
+	beforeContent = beforeContent.replace(/&lt;/g, "<");	
+	beforeContent = beforeContent.replace(/&gt;/g, ">");	
+	beforeContent = beforeContent.replace(/&quot;/g, "\"");	
+	
+	beforeContent = beforeContent.replace(/<br>/g, "\n");	
+	//console.log(beforeContent)
+	
+	
+	// 기존 댓글 영역을 삭제하고 textarea를 추가 
+	$(el).parent().prev().remove();
+	var textarea = $("<textarea>").addClass("replyUpdateContent").attr("rows", "3").text(beforeContent);
+	$(el).parent().before(textarea);
+	
+	//console.log(replyBtnArea);
+	
+	
+	// 수정 버튼
+	var updateReply = $("<button>").addClass("btn btn-primary btn-sm ml-1 mb-4").text("댓글 수정").attr("onclick", "updateReply(" + replyNo + ", this)");
+	
+	// 취소 버튼
+	var cancelBtn = $("<button>").addClass("btn btn-primary btn-sm ml-1 mb-4").text("취소").attr("onclick", "updateCancel(this)");
+	
+	var replyBtnArea = $(el).parent();
+	
+	$(replyBtnArea).empty(); 
+	$(replyBtnArea).append(updateReply); 
+	$(replyBtnArea).append(cancelBtn); 
 	
 }
 
