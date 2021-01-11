@@ -103,7 +103,8 @@
 
 			<div class="text-center">
 				<button type="submit" class="btn btn-primary">수정</button>
-				<button type="button" class="btn btn-primary">이전으로</button>
+				<button type="button" class="btn btn-primary"
+					onclick="location.href='${header.referer}'">이전으로</button>
 			</div>
 
 		</form>
