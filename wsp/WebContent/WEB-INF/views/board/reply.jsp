@@ -99,8 +99,8 @@
 				<p class="rContent">댓글 내용2</p>
 				
 				<div class="replyBtnArea">
-					<button class="btn btn-primary btn-sm ml-1" id="updateReply" onclick="showUpdateReply(2, this)">수정</button>
-					<button class="btn btn-primary btn-sm ml-1" id="deleteReply" onclick="deleteReply(2)">삭제</button>
+					<button class="btn btn-primary btn-sm ml-1" onclick="showUpdateReply(2, this)">수정</button>
+					<button class="btn btn-primary btn-sm ml-1" onclick="deleteReply(2)">삭제</button>
 				</div>
 			</li>
 	
@@ -129,7 +129,41 @@ function selectReplyList(){
 		type : "post",
 		dataType : "JSON",
 		success : function(rList) {
-			console.log(rList);
+			// console.log(rList);
+			
+			$("#replyListArea").html("");
+			
+			$.each(rList, function(index, item) {
+				
+				var li = $("<li>").addClass("reply-row");
+				var rWriter = $("<p>").addClass("rWriter").text(item.memberId);
+				var rDate = $("<p>").addClass("rDate").text("작성일 : " + item.replyCreateDate);
+				
+				var div = $("<div>");
+				div.append(rWriter).append(rDate);
+				
+				var rContent = $("<p>").addClass("rContent").html(item.replyContent);
+				
+				li.append(div).append(rContent);
+				
+				// 댓글, 수정, 삭제 버튼 영역
+				var replyBtnArea = $("<div>").addClass("replyBtnArea");
+				
+				// 현재 댓글의 작성자와 로그인한 멤버의 아이디가 같을 때 버튼 추가
+				if(item.memberId == loginMemberId){
+					
+					// ** 추가되는 댓글에 onclick 이벤트를 부여하여 버튼 클릭 시 수정, 삭제를 수행할 수 있는 함수를 이벤트 핸들러로 추가함. 
+					var showUpdate = $("<button>").addClass("btn btn-primary btn-sm ml-1").text("수정").attr("onclick", "showUpdateReply("+item.replyNo+", this)");
+					var deleteReply = $("<button>").addClass("btn btn-primary btn-sm ml-1").text("삭제").attr("onclick", "deleteReply("+item.replyNo+")");
+					
+					replyBtnArea.append(showUpdate).append(deleteReply);
+					
+					li.append(replyBtnArea);
+				}
+
+				$("#replyListArea").append(li);
+				
+			});
 		},
 		error : function() {
 			console.log("댓글 목록 조회 실패");
@@ -142,6 +176,44 @@ function selectReplyList(){
 
 // 댓글 등록 (ajax)
 $("#addReply").on("click", function(){
+	
+	// 댓글 내용을 얻어와서 변수에 저장
+	var replyContent = $("#replyContent").val().trim();
+	
+	if(loginMemberId == "") {
+		alert("로그인 후 이용해 주셈 ㅋㅋ");
+	} else { // 로그인이 되어있는 경우
+		
+		// 댓글 내용이 작성되어 있는지 확인
+		if(replyContent.length == 0) {
+			alert("댓글 작성 후 클릭해 주셈 ㅋㅋ");
+			
+		} else { // 로그인도 되어있고 댓글도 작성되어 있는 경우
+			
+			// 회원번호를 얻어와서 변수에 저장
+			var replyWriter = "${loginMember.memberNo}";
+			
+			$.ajax({
+				url : "${contenxtPath}/reply/insertReply.do",
+				data : {"replyWriter" : replyWriter,
+								"replyContent" : replyContent,
+								"parentBoardNo" : parentBoardNo},
+				type : "post",
+				success : function(result) {
+					if(result > 0) {
+						
+					}
+					
+				},
+				error : function() {
+					console.log("댓글 등록 실패");
+				}
+
+			});
+			
+		}
+	
+	}
 	
 });
 
