@@ -243,7 +243,7 @@ function showUpdateReply(replyNo, el){
 	
 	// 댓글 수정화면 출력 전 요소를 저장해둠.
 	beforeReplyRow = $(el).parent().parent().html();
-	//console.log(beforeReplyRow);
+	console.log(beforeReplyRow);
 	
 	
 	// 작성되어있던 내용(수정 전 댓글 내용) 
@@ -263,7 +263,7 @@ function showUpdateReply(replyNo, el){
 	
 	// 기존 댓글 영역을 삭제하고 textarea를 추가 
 	$(el).parent().prev().remove();
-	var textarea = $("<textarea>").addClass("replyUpdateContent").attr("rows", "3").text(beforeContent);
+	var textarea = $("<textarea>").addClass("replyUpdateContent").attr("rows", "3").val(beforeContent);
 	$(el).parent().before(textarea);
 	
 	//console.log(replyBtnArea);
@@ -289,8 +289,25 @@ function showUpdateReply(replyNo, el){
 // 댓글 수정 함수
 function updateReply(replyNo, el){
 	
+	// 수정된 댓글 내용
+	var replyContent = $(el).parent().prev().val();
 	
-	
+	$.ajax({
+ 		url : "${contextPath}/reply/updateReply.do",
+		type : "post",
+		data : {"replyNo" : replyNo, "replyContent" : replyContent},
+		success : function(result){
+			if(result > 0){
+				selectReplyList(parentBoardNo);
+				
+				swal({"icon" : "success" , "title" : "댓글 수정 성공"});
+			}
+			
+		}, error : function(){
+			console.log("댓글 수정 실패");
+		}		
+	});
+
 }
 
 //-----------------------------------------------------------------------------------------
@@ -298,6 +315,8 @@ function updateReply(replyNo, el){
 
 // 댓글 수정 취소 시 원래대로 돌아가는 함수
 function updateCancel(el){
+	//console.log(beforeReplyRow);
+	$(el).parent().parent().html(beforeReplyRow);
 }
 
 
@@ -306,6 +325,26 @@ function updateCancel(el){
 
 //댓글 삭제 함수
 function deleteReply(replyNo){
+	
+	if(confirm("정말로 삭제하시겠습니까?")){
+		var url = "${contextPath}/reply/deleteReply.do";
+		
+		$.ajax({
+			url : url,
+			data : {"replyNo" : replyNo},
+			success : function(result){
+				if(result > 0){
+					selectReplyList(parentBoardNo);
+					
+					swal({"icon" : "success" , "title" : "댓글 삭제 성공"});
+				}
+				
+			}, error : function(){
+				console.log("ajax 통신 실패");
+			}
+		});
+	}
+	
 }
 
 

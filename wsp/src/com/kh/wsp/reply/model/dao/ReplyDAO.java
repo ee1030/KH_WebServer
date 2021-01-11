@@ -92,4 +92,53 @@ public class ReplyDAO {
 		return result;
 	}
 
+	/** 댓글 수정 DAO
+	 * @param conn
+	 * @param reply
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateReply(Connection conn, Reply reply) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateReply");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, reply.getReplyContent());
+			pstmt.setInt(2, reply.getReplyNo());
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	/** 댓글 삭제 DAO
+	 * @param conn
+	 * @param replyNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateReplyStatus(Connection conn, int replyNo) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("updateReplyStatus");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, replyNo);
+			
+			result = pstmt.executeUpdate();
+					
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
 }
