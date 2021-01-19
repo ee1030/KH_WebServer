@@ -51,7 +51,7 @@ public class IframeTest {
 		List<WebElement> pList = driver.findElements(By.tagName("p"));
 		
 		for(WebElement p : pList) {
-			System.out.println(p.getText());
+			System.out.println(p.getText()); // 크롤링 기초
 		}
 
 		// 테스트 종료
