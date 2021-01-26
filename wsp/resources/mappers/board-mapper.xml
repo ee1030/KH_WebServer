@@ -126,14 +126,14 @@
   </select>
   
   <!-- 다음 게시글 번호 조회 -->
-  <select id="selectNextNo">
+  <select id="selectNextNo" resultType="_int">
   	SELECT SEQ_BNO.NEXTVAL FROM DUAL
   </select>
   
   <!-- 게시글 삽입 -->
-  <insert id="insertBoard">
+  <insert id="insertBoard" parameterType="hashmap">
   	INSERT INTO BOARD(BOARD_NO, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER, CATEGORY_CD)
-		VALUES(?, ?, ?, ?, ?)
+		VALUES(#{boardNo}, #{boardTitle}, #{boardContent}, #{boardWriter}, #{categoryCode})
   </insert>
   
 </mapper>
