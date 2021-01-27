@@ -99,7 +99,6 @@ public class BoardService2 {
 	 * @throws Exception
 	 */
 	public int insertBoard(Map<String, Object> map) throws Exception {
-		Connection conn = getConnection();
 		SqlSession session = getSqlSession();
 		
 		int result = 0;
@@ -136,23 +135,17 @@ public class BoardService2 {
 				if(result > 0 && !fList.isEmpty()) {
 					result = 0; // result 재활용을 위해 0으로 초기화
 					
-					// fList의 요소를 하나씩 반복 접근 하여
-					// DAO 메소드를 반복 호출해 정보를 삽입함.
+					// 게시글 번호를 파일 정보에 세팅
 					for(Attachment at : fList) {
-						
-						// 파일 정보가 저장된 Attachment 객체에
-						// 해당 파일이 작성된 게시글 번호를 추가 세팅
 						at.setParentBoardNo(boardNo);
+					}
 						
-						result = dao.insertAttachment(conn, at);
-						
-						if(result == 0) { // 파일정보 삽입 실패
-							//break; // 보류
-							
-							// 강제로 예외 발생
-							throw new FileInsertFailedException("파일 정보 삽입 실패");
-						}
-					}	
+					result = dao.insertAttachmentList(session, fList);
+					
+					if(result == 0) {
+						throw new FileInsertFailedException("파일 정보 삽입 실패");
+					}
+				
 				}
 			} catch (Exception e) {
 				// 4,5번에 대한 추가 작업
@@ -182,20 +175,17 @@ public class BoardService2 {
 			// 6. 트랜잭션 처리
 			if(result > 0) {
 				session.commit();
-				commit(conn);
 				
 				// 삽입 성공 시 상세 조회 화면으로 이동해야 되기 때문에
 				// 글 번호를 반환 할 수 있도록 result에 boardNo를 대입
 				result = boardNo;
 			} else {
 				session.rollback();
-				rollback(conn);
 			}
 		}
 			
 		// 7. 커넥션 반환
 		session.close();
-		close(conn);
 		
 		// 8. 결과 반환
 		return result;

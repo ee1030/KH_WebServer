@@ -10,7 +10,6 @@
 
 	<!-- 마이바티스 기본 세팅 -->
 	<settings>
-		
 		<!-- 마이바티스 null 처리 세팅
 				마이바티스는 매핑되는 컬럽에 null 값이 있을 경우 오류를 발생 시킴.
 				그래서 값이 null 일때 처리방법을 지정해둠 -->
@@ -43,5 +42,6 @@
   <mappers>
     <!-- <mapper resource="org/mybatis/example/BlogMapper.xml"/> -->
     <mapper resource="/mappers/board-mapper.xml"/>
+    <mapper resource="/mappers/search-mapper.xml"/>
   </mappers>
 </configuration>

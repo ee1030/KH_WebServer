@@ -136,4 +136,34 @@
 		VALUES(#{boardNo}, #{boardTitle}, #{boardContent}, #{boardWriter}, #{categoryCode})
   </insert>
   
+  <!-- 게시글 이미지 목록 삽입(insert / parameterType = "list")
+  		insert 성공 : 1 반환 / 실패 : 0반환
+  		update, delete 성공 : 행의 수 / 실패 0 반환
+  -->
+  <insert id="insertAttachmentList" parameterType="list">
+  
+  	<!--
+  	 collection : 반복 접근할 배열 또는 컬렉션 객체 
+  	 item : 컬렉션 객체에서 꺼내온 요소 하나
+  	 separator : 구분자
+  	-->
+  	<!-- <foreach collection="list" item="item" separator=" ">
+	  	INSERT INTO ATTACHMENT
+			VALUES(SEQ_FNO.NEXTVAL, #{item.filePath}, #{item.fileName}, #{item.fileLevel}, #{item.parentBoardNo})
+		</foreach> -->
+		
+		INSERT INTO ATTACHMENT
+		SELECT SEQ_FNO.NEXTVAL, A.*
+		FROM (
+			<foreach collection="list" item="item" separator="UNION ALL">
+				SELECT #{item.filePath} FILE_PATH,
+							 #{item.fileName} FILE_NAME,
+							 #{item.fileLevel} FILE_LEVEL,
+							 #{item.parentBoardNo} PARENT_BOARD_NO
+				FROM DUAL 
+			</foreach>
+		) A
+		
+  </insert>
+  
 </mapper>

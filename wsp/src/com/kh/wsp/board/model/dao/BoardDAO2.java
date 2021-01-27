@@ -81,7 +81,7 @@ public class BoardDAO2 {
 		// offset : 시작점
 		// limit : 시작점으로 부터 몇개 까지
 		
-		int offset = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+		int offset = (pInfo.getCurrentPage() - 1) * pInfo.getLimit();
 		RowBounds rowBounds = new RowBounds(offset, pInfo.getLimit());
 		
 		// selectList() 메소드 : 다중 행 결과를 자동적으로 List에 담아 반환
@@ -445,6 +445,16 @@ public class BoardDAO2 {
 	 */
 	public int insertBoard(SqlSession session, Map<String, Object> map) throws Exception {
 		return session.insert("boardMapper.insertBoard", map);
+	}
+
+	/** 게시글 이미지 리스트 삽입
+	 * @param session
+	 * @param fList
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertAttachmentList(SqlSession session, List<Attachment> fList) throws Exception {
+		return session.insert("boardMapper.insertAttachmentList", fList);
 	}
 
 }

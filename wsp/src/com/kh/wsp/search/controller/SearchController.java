@@ -16,6 +16,7 @@ import com.kh.wsp.board.model.vo.Attachment;
 import com.kh.wsp.board.model.vo.Board;
 import com.kh.wsp.board.model.vo.PageInfo;
 import com.kh.wsp.search.model.service.SearchService;
+import com.kh.wsp.search.model.service.SearchService2;
 
 @WebServlet("/search.do")
 public class SearchController extends HttpServlet {
@@ -27,7 +28,7 @@ public class SearchController extends HttpServlet {
 		String cp = request.getParameter("cp");
 		
 		try {
-			SearchService service = new SearchService();
+			SearchService2 service = new SearchService2();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("searchKey", searchKey);
