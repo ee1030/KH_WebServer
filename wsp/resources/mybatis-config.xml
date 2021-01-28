@@ -20,6 +20,8 @@
 	<typeAliases>
 		<typeAlias type="com.kh.wsp.board.model.vo.Board" alias="Board"/>
 		<typeAlias type="com.kh.wsp.board.model.vo.Attachment" alias="Attachment"/>
+		<typeAlias type="com.kh.wsp.reply.model.vo.Reply" alias="Reply"/>
+		<typeAlias type="com.kh.wsp.member.model.vo.Member" alias="Member"/>
 	</typeAliases>
 
 	<!-- environments : DB 연결 설정 정보를 작성하는 태그 -->
@@ -43,5 +45,7 @@
     <!-- <mapper resource="org/mybatis/example/BlogMapper.xml"/> -->
     <mapper resource="/mappers/board-mapper.xml"/>
     <mapper resource="/mappers/search-mapper.xml"/>
+    <mapper resource="/mappers/reply-mapper.xml"/>
+    <mapper resource="/mappers/member-mapper.xml"/>
   </mappers>
 </configuration>

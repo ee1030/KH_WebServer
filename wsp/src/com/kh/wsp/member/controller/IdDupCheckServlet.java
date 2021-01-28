@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kh.wsp.member.model.service.MemberService;
+import com.kh.wsp.member.model.service.MemberService2;
 
 @WebServlet("/member/idDupCheck.do")
 public class IdDupCheckServlet extends HttpServlet {
@@ -25,7 +26,7 @@ public class IdDupCheckServlet extends HttpServlet {
 		
 		try {
 			// 1) 비즈니스 로직 호출하여 결과 반환 받기
-			int result = new MemberService().idDupCheck(id);
+			int result = new MemberService2().idDupCheck(id);
 			
 			// 팝업창 중복 검사 시
 			// 2) 반환 결과를 request에 세팅하여 요청 위임 진행

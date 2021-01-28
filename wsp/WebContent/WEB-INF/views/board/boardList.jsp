@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -137,6 +138,16 @@
 			<%---------------------- Pagination ----------------------%>
 			<%-- 페이징 처리 주소를 쉽게 사용할 수 있도록 미리 변수에 저장 --%>
 			<c:choose>
+				<%-- 검색 내용이 파라미터에 존재할 때   ==  검색을 통해 만들어진 페이지인가?  --%>
+				<c:when test="${!empty param.ct }">
+					<c:url var="pageUrl" value="/search2.do"/>
+					
+					<%-- 쿼리스트링으로 사용할 내용을 변수에 저장 --%>
+					<c:set var="category" value="&ct=${fn:join(paramValues.ct,'&ct=')}"/>
+					
+					<c:set var="searchStr" value="${category}&sk=${param.sk}&sv=${param.sv}" />
+				</c:when>
+				
 				<%-- 검색 내용이 파라미터에 존재할 때 == 검색을 통해 만들어진 페이지인가? --%>
 				<c:when test="${!empty param.sk && !empty param.sv }">
 					<c:url var="pageUrl" value="/search.do"/>
@@ -149,6 +160,9 @@
 					<c:url var="pageUrl" value="/board/list.do"/>
 				</c:otherwise>
 			</c:choose>
+			
+			
+			
 			
 			
 			<!-- 화살표에 들어갈 주소를 변수로 생성 -->

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kh.wsp.reply.model.service.ReplyService;
+import com.kh.wsp.reply.model.service.ReplyService2;
 import com.kh.wsp.reply.model.vo.Reply;
 
 @WebServlet("/reply/*")
@@ -24,7 +25,7 @@ public class ReplyController extends HttpServlet {
 		String command = uri.substring((contextPath+"/reply").length());
 
 		try {
-			ReplyService service = new ReplyService();
+			ReplyService2 service = new ReplyService2();
 			
 			// 댓글 목록 조회 Controller *****************************************
 			if(command.equals("/selectList.do")) {

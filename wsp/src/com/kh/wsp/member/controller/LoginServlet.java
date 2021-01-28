@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.kh.wsp.member.model.service.MemberService;
+import com.kh.wsp.member.model.service.MemberService2;
 import com.kh.wsp.member.model.vo.Member;
 
 // @WebServlet에 작성되는 요청 주소에서
@@ -45,7 +46,7 @@ public class LoginServlet extends HttpServlet {
 		try {
 			// 4. Member 객체를 Service로 전달하여 결과를 반환받기
 			// (로그인 이란? id/pw가 일치하는 회원정보를 DB에서 조회해 오는것)
-			Member loginMember = new MemberService().loginMember(member);
+			Member loginMember = new MemberService2().loginMember(member);
 			
 			// System.out.println(loginMember);
 			

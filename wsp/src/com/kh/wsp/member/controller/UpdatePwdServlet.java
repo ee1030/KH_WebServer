@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.kh.wsp.member.model.service.MemberService;
+import com.kh.wsp.member.model.service.MemberService2;
 import com.kh.wsp.member.model.vo.Member;
 
 @WebServlet("/member/updatePwd.do")
@@ -28,7 +29,7 @@ public class UpdatePwdServlet extends HttpServlet {
 		try {
 			loginMember.setMemberPwd(currentPwd);
 			// 비즈니스 로직 처리 후 결과 반환 받기
-			int result = new MemberService().updatePwd(loginMember, newPwd);
+			int result = new MemberService2().updatePwd(loginMember, newPwd);
 			
 			String swalIcon = null;
 			String swalTitle = null;

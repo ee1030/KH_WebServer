@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.kh.wsp.member.model.service.MemberService;
+import com.kh.wsp.member.model.service.MemberService2;
 import com.kh.wsp.member.model.vo.Member;
 
 @WebServlet("/member/updateStatus.do")
@@ -26,7 +27,7 @@ public class UpdateStatusServlet extends HttpServlet {
 		loginMember.setMemberPwd(currentPwd);
 		
 		try {
-			int result = new MemberService().updateStatus(loginMember);
+			int result = new MemberService2().updateStatus(loginMember);
 			
 			String swalIcon = null;
 			String swalTitle = null;

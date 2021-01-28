@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.kh.wsp.member.model.service.MemberService;
+import com.kh.wsp.member.model.service.MemberService2;
 import com.kh.wsp.member.model.vo.Member;
 
 @WebServlet("/member/signUp.do")
@@ -57,7 +58,7 @@ public class SignUpServlet extends HttpServlet {
 		try {
 
 			//비즈니스 로직 수행 후 결과를 반환 받아 저장
-			int result = new MemberService().signUp(member);
+			int result = new MemberService2().signUp(member);
 			
 			String swalIcon = null;
 			String swalTitle = null;
