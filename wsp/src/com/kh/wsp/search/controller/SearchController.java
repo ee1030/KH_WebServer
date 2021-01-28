@@ -46,8 +46,8 @@ public class SearchController extends HttpServlet {
 			}*/
 			
 			// 검색 게시글 목록 조회 성공 시 썸네일 목록 조회 수행
-			if(bList != null) {
-				List<Attachment> fList = service.searchThumbnailList(map, pInfo);
+			if(bList != null && !bList.isEmpty()) {
+				List<Attachment> fList = service.searchThumbnailList(bList);
 				
 				if(!fList.isEmpty()) { // 조회된 썸네일 목록이 있다믄
 					request.setAttribute("fList", fList);

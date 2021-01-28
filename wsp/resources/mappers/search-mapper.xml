@@ -17,6 +17,14 @@
 		<result property="boardStatus" column="BOARD_STATUS"/>
 	</resultMap>
 	
+	<resultMap type="Attachment" id="attachment_rm">
+		<id property="fileNo" column="FILE_NO"/>
+		<result property="filePath" column="FILE_PATH"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileLevel" column="FILE_LEVEL"/>
+		<result property="parentBoardNo" column="PARENT_BOARD_NO"/>
+	</resultMap>
+	
 	<!-- 조건에 맞는 전체 게시글 수 조회(select / 단일 행 / resultType="_int") -->
 	<select id="getListCount" parameterType="map" resultType="_int">
 		SELECT COUNT(*) FROM V_BOARD
@@ -46,7 +54,7 @@
 		<!-- 동적 SQL(choose, when, otherwise) -->
 		<choose>
 			<when test="searchKey == 'title'">		
-			AND BOARD_TITLE LIKE '%' || #{searchValue} || '%'
+				AND BOARD_TITLE LIKE '%' || #{searchValue} || '%'
 			</when>
 			<when test="searchKey == 'content'">		
 				AND BOARD_CONTENT LIKE '%' || #{searchValue} || '%'
@@ -55,11 +63,26 @@
 				AND (BOARD_TITLE LIKE '%' || #{searchValue} || '%'
 					OR BOARD_CONTENT LIKE '%' || #{searchValue} || '%')
 			</when>
-			<otherwise>		
+			<otherwise>
 				AND MEMBER_ID LIKE '%' || #{searchValue} || '%'
 			</otherwise>
 		</choose>
+		ORDER BY BOARD_NO DESC
 		
+	</select>
+	
+	<!-- 게시글 이미지 조회(select / 다중 행 / list / attachment_rm) -->
+	<select id="searchThumbnailList" parameterType="list" resultMap="attachment_rm">
+		SELECT * FROM ATTACHMENT
+		WHERE FILE_LEVEL = 0
+		AND PARENT_BOARD_NO IN
+		<!-- 
+			open : foreach 시작 전 추가할 구문
+			close : foreach 종료 후 추가할 구문
+		-->
+		<foreach collection="list" item="item" open="(" close=")" separator=", ">
+			#{item.boardNo}
+		</foreach>
 	</select>
 	
 </mapper>

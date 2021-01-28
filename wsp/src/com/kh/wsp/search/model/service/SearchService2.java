@@ -89,20 +89,17 @@ public class SearchService2 {
 	}
 
 	/** 검색이 적용된 썹네일 목록 조회 Service
-	 * @param map
+	 * @param bList
 	 * @param pInfo
 	 * @return fList
 	 * @throws Exception
 	 */
-	public List<Attachment> searchThumbnailList(Map<String, Object> map, PageInfo pInfo) throws Exception {
-		Connection conn = getConnection();
+	public List<Attachment> searchThumbnailList(List<Board> bList) throws Exception {
+		SqlSession session = getSqlSession();
 		
-		// 검색에 사용될 SQL 조건문 생성
-		String condition = createCondition(map);
+		List<Attachment> fList = dao.searchThumbnailList(session, bList);
 		
-		List<Attachment> fList = dao.searchThumbnailList(conn, pInfo, condition);
-		
-		close(conn);
+		session.close();
 		
 		return fList;
 	}

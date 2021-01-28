@@ -50,55 +50,14 @@ public class SearchDAO2 {
 	}
 
 	/** 검색이 적용된 썸네일 목록 조회 DAO
-	 * @param conn
+	 * @param session
 	 * @param pInfo
-	 * @param condition
+	 * @param bList
 	 * @return fList
 	 * @throws Exception
 	 */
-	public List<Attachment> searchThumbnailList(Connection conn, PageInfo pInfo, String condition) throws Exception {
-		
-		List<Attachment> fList = null;
-		
-		String query =
-				"SELECT FILE_NAME, PARENT_BOARD_NO FROM ATTACHMENT " + 
-				"WHERE PARENT_BOARD_NO IN (" + 
-				"    SELECT BOARD_NO FROM " + 
-				"    (SELECT ROWNUM RNUM, V.* FROM " + 
-				"            (SELECT BOARD_NO  FROM V_BOARD " + 
-				"            WHERE BOARD_STATUS='Y' " + 
-				"            AND " + condition + 
-				"            ORDER BY BOARD_NO DESC ) V) " + 
-				"    WHERE RNUM BETWEEN ? AND ?" + 
-				") " + 
-				"AND FILE_LEVEL = 0";
-		
-		try {
-			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
-			int endRow = startRow + pInfo.getLimit() - 1;
-			
-			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, startRow);
-			pstmt.setInt(2, endRow);
-			
-			rset = pstmt.executeQuery();
-			
-			fList = new ArrayList<Attachment>();
-			
-			while(rset.next()) {
-				Attachment at = new Attachment();
-				at.setFileName(rset.getString("FILE_NAME"));
-				at.setParentBoardNo(rset.getInt("PARENT_BOARD_NO"));
-				
-				fList.add(at);
-			}
-			
-		} finally {
-			close(rset);
-			close(pstmt);
-		}
-
-		return fList;
+	public List<Attachment> searchThumbnailList(SqlSession session, List<Board> bList) throws Exception {
+		return session.selectList("searchMapper.searchThumbnailList", bList);
 	}
 
 
