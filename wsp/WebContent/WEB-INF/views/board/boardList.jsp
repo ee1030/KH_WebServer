@@ -56,6 +56,7 @@
 	<div class="container my-5">
 		
 		<h1>게시판</h1>
+			<jsp:include page="searchForm.jsp"></jsp:include>
 		
 			<div class="list-wrapper">
 				<table class="table table-hover table-striped my-5" id="list-table">

@@ -103,4 +103,43 @@ public class SearchService2 {
 		
 		return fList;
 	}
+
+	/** 다중 조건이 포함된 전체 게시글 수 조회 Service
+	 * @param map
+	 * @return pInfo
+	 * @throws Exception
+	 */
+	public PageInfo getPageInfo2(Map<String, Object> map) throws Exception {
+		SqlSession session = getSqlSession();
+		
+		// 얻어온 파라미터 cp가 null이면 1, 아니면 int형으로 파싱
+		map.put("currentPage",
+				(map.get("currentPage") == null) ? 1 
+						: Integer.parseInt((String)map.get("currentPage")));
+		
+		int listCount = dao.getListCount2(session, map);
+		
+		// SqlSession 반환
+		session.close();
+		
+		// PageInfo 객체를 생성하여 반환
+		return new PageInfo((int)map.get("currentPage"), listCount);
+	}
+	
+	/** 다중 조건이 포함된 검색 게시글 목록 리스트 조회 Service
+	 * @param map
+	 * @param pInfo 
+	 * @return bList
+	 * @throws Exception
+	 */
+	public List<Board> searchBoardList2(Map<String, Object> map, PageInfo pInfo) throws Exception {
+		SqlSession session = getSqlSession();
+		
+		List<Board> bList = dao.searchBoardList2(session, pInfo, map);
+		
+		session.close();
+		
+		return bList;
+	}
+
 }
